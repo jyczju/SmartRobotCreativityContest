@@ -1,0 +1,2 @@
+# SmartRobotCreativityContest
+ Github for SRCC
