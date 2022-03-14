@@ -133,6 +133,9 @@ class MonitorBabay:
 
                 # 人脸框
                 frame = self.utils.draw_face_box(face,frame,'','','')
+
+                # 仅测试单人
+                break
               
 
             cTime = time.time()
@@ -250,10 +253,21 @@ class MonitorBabay:
                 # 梯形方向
                 self.pose_estimator.draw_annotation_box(frame, rotation_vector, translation_vector,is_watch)
                 # 指针
-                self.pose_estimator.draw_pointer(frame, rotation_vector, translation_vector)
+                # self.pose_estimator.draw_pointer(frame, rotation_vector, translation_vector)
                 # 三维坐标系
                 # self.pose_estimator.draw_axes(frame, rotation_vector, translation_vector)
+                # 鼻子
+                # self.pose_estimator.draw_nose(frame)
+                # 眼睛
+                # self.pose_estimator.draw_eye(frame)
+                # 眼睛中心点
+                center_point = self.pose_estimator.eye_center(frame,True)
+                print("center_point",center_point)
 
+                # 画面中心点
+                cv2.circle(frame, (int(width/2),int(height/2)), 5,(255,255,0),-1)
+                delta = (center_point[0]-int(width/2),center_point[1]-int(height/2))
+                print("delta",delta)
                 
                 # if display == 1:
                 #     # 人脸框

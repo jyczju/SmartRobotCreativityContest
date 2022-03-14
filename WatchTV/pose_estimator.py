@@ -167,5 +167,42 @@ class PoseEstimator:
         point2 = ( int(nose_end_point2D[0][0][0]), int(nose_end_point2D[0][0][1]))
         
         cv2.line(img, point1, point2, (0,255,0), 4)
+
+    # 鼻子
+    def draw_nose(self, img):
+        nose_point = (int(self.image_points[30][0]), int(self.image_points[30][1]))
+
+        cv2.circle(img, nose_point, 5,(0,255,0),-1)
+
+    def draw_eye(self, img):
+        # LEFT_EYE=[37 38 39 40 41 42]
+        # RIGHT_EYE=[43 44 45 46 47 48]
+
+        # 绘制左眼
+        for i in range(36,42):
+            eye_point = (int(self.image_points[i][0]), int(self.image_points[i][1]))
+            cv2.circle(img, eye_point, 5,(0,255,0),-1)
+
+        # 绘制右眼
+        for i in range(42,48):
+            eye_point = (int(self.image_points[i][0]), int(self.image_points[i][1]))
+            cv2.circle(img, eye_point, 5,(255,0,0),-1)
+
+    def eye_center(self, img, draw_or_not = True):
+        x = 0
+        y = 0
+
+        for i in range(36,48):
+            x += int(self.image_points[i][0])
+            y += int(self.image_points[i][1])
+
+
+        center_point = (int(x/12),int(y/12))
+        # cv2.circle(img, center_point, 5,(0,255,255),-1)
+        
+        if draw_or_not:
+            print(draw_or_not)
+            cv2.circle(img, center_point, 5,(0,255,255),-1)
+        return center_point
     
     
