@@ -1,17 +1,56 @@
-#encoding:utf-8
+from tkinter import N
 import cv2
 import numpy as np
 
-#将图片转为灰度图像
-img = cv2.imread('33.png')
+def getHProjection(image):
+    '''水平投影'''    
+    #图像高与宽
+    (h,w)=image.shape
+    #长度与图像高度一致的数组
+    H = [0]*h
+    #循环统计每一行白色像素的个数
+    for y in range(h):
+        for x in range(w):
+            if image[y,x] == 0:
+                H[y]+=1
+    
+    # # 绘制水平投影图像，调试用
+    # hProjection = np.zeros(image.shape,np.uint8)
+    # for y in range(h):
+    #     for x in range(H[y]):
+    #         hProjection[y,x] = 255
+    # cv2.imshow('hProjection2',hProjection)
+ 
+    return H
 
-#将原图做个备份
-sourceImage = img.copy()
 
-#高斯模糊滤波器对图像进行模糊处理
-img = cv2.GaussianBlur(img, (3, 3), 0)
+def getVProjection(image):
+    '''垂直投影'''
+    #图像高与宽
+    (h,w) = image.shape
+    #长度与图像宽度一致的数组
+    W = [0]*w
+    #循环统计每一列白色像素的个数
+    for x in range(w):
+        for y in range(h):
+            if image[y,x] == 0:
+                W[x]+=1
+    
+    # # 绘制垂直平投影图像，调试用
+    # vProjection = np.zeros(image.shape,np.uint8);
+    # for x in range(w):
+    #     for y in range(h-W[x],h):
+    #         vProjection[y,x] = 255
+    # cv2.imshow('vProjection',vProjection)
 
-# cv2.imshow('sourceImage', sourceImage)
+    return W
+
+
+img = cv2.imread('44.png') # 读取图片
+sourceImage = img.copy() # 将原图做个备份
+
+img = cv2.GaussianBlur(img, (3, 3), 0) # 高斯模糊滤波器对图像进行模糊处理
+cv2.imshow('sourceImage', sourceImage)
 
 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 转换为灰色通道
 hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # 转换为HSV空间
@@ -23,16 +62,15 @@ upper_blue = np.array([250, 255, 255])  # 设定蓝色的阈值上限
 plate_mask = cv2.inRange(hsv_img, lower_blue, upper_blue)  # 设定掩膜取值范围
 blue_mask = plate_mask.copy()
 # cv2.imshow('blue',plate_mask)
-
  
 # 指定核大小，如果效果不佳，可以试着将核调大
 kernel_dilate = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
 kernel_erode = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+
 # 对图像进行膨胀腐蚀处理
 # plate_mask = cv2.dilate(plate_mask, kernelY, anchor=(-1, -1), iterations=1)
-plate_mask = cv2.dilate(plate_mask, kernel_dilate, anchor=(-1, -1), iterations=1)
-# plate_mask = cv2.erode(plate_mask, kernel_erode, anchor=(-1, -1), iterations=2)
-
+plate_mask = cv2.dilate(plate_mask, kernel_dilate, anchor=(-1, -1), iterations=1) # 膨胀
+# plate_mask = cv2.erode(plate_mask, kernel_erode, anchor=(-1, -1), iterations=2) # 腐蚀
 
 # 再对图像进行模糊处理
 plate_mask = cv2.medianBlur(plate_mask, 9)
@@ -43,10 +81,7 @@ edge = cv2.Canny(plate_mask, 30, 120, 3) # 边缘检测
 # cv2.imshow('edge',edge)
 
 
-# 检测轮廓
-# 输入的三个参数分别为：输入图像、层次类型、轮廓逼近方法
-# 返回的两个返回值分别为：图轮廓、层次
-contours, hier = cv2.findContours(plate_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+contours, hier = cv2.findContours(plate_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE) # 检测轮廓
 
 reg_plate = None
 if len(contours)>0:
@@ -62,17 +97,17 @@ if len(contours)>0:
         #     cv2.circle(sourceImage, tuple(peak), 10, (0, 0, 255),2) # 绘制顶点
         # cv2.imshow('ss',sourceImage)
 
-        # 轮廓为4个点表示找到车牌
-        if len(approx) == 4:
-            src = np.float32([approx[0][0],approx[1][0],approx[2][0],approx[3][0]])
+        # 轮廓为4个点表示找到棋子
+        if len(approx) == 4: # 此处还可加上长宽比判据
+            src = np.float32([approx[0][0],approx[1][0],approx[2][0],approx[3][0]]) # 原图的四个顶点
             width = 250
             length = 450
             side = 15
-            dst = np.float32([[0, 0], [0, width],  [length, width],[length, 0]])
-            m = cv2.getPerspectiveTransform(src, dst)
-            reg_plate = cv2.warpPerspective(blue_mask, m, (length, width))
-            # 裁切掉边框干扰
-            reg_plate = reg_plate[int(side):int(width-side),int(side):int(length-side)]
+            dst = np.float32([[0,0], [0,width], [length,width], [length,0]]) # 期望的四个顶点
+            m = cv2.getPerspectiveTransform(src, dst) # 生成旋转矩阵
+            reg_plate = cv2.warpPerspective(blue_mask, m, (length, width)) # 旋转后的图像
+            _, reg_plate = cv2.threshold(reg_plate, 127, 255, cv2.THRESH_BINARY) # 对图像进行二值化操作
+            reg_plate = reg_plate[int(side):int(width-side),int(side):int(length-side)] # 裁切掉边框干扰
 
 if reg_plate is None:
     print('未检测到棋子')
@@ -80,79 +115,46 @@ else:
     print('检测到棋子')
     # cv2.imshow("reg_plate", reg_plate)
 
-# 边缘检测
-lpImage = cv2.Canny(reg_plate, 500, 200, 3)
+    lpImage = cv2.Canny(reg_plate, 500, 200, 3) # 边缘检测
+    ret, thresh = cv2.threshold(lpImage.copy(), 127, 255, cv2.THRESH_BINARY) # 对图像进行二值化操作
+    # cv2.imshow('thresh', thresh)
+    
+    # 字符分割
+    H = getHProjection(reg_plate) # 水平投影
+    H_Start = None
+    H_End = None
+    for i in range(len(H)):
+        if H[i] > 0 and H_Start is None:
+            H_Start = i # 寻找开始点
+        if H[i] <= 0 and H_Start is not None:
+            H_End =i # 寻找结束点
+        if H_Start is not None and H_End is not None:
+            if (H_End-H_Start)<0.5*len(H): # 排除干扰
+                continue
+            else:
+                break
+    
+    # 缩减上下间距
+    reg_plate_H = reg_plate[H_Start:H_End,:]
+    First_Hanzi_H = thresh[H_Start:H_End,:]
+    
+    W = getVProjection(reg_plate_H) # 垂直投影
+    W_Start = None
+    W_End = None
+    for i in range(len(W)):
+        if W[i] > 0 and W_Start is None:
+            W_Start = i # 寻找开始点
+        if W[i] <= 0 and W_Start is not None:
+            W_End =i # 寻找结束点
+        if W_Start is not None and W_End is not None:
+            if (W_End-W_Start)<0.35*len(W): # 排除偏旁干扰
+                continue
+            else:
+                break
 
-# 对图像进行二值化操作
-ret, thresh = cv2.threshold(lpImage.copy(), 127, 255, cv2.THRESH_BINARY)
-cv2.imshow('thresh', thresh)
+    # 根据确定的位置分割出第一个字符
+    First_Hanzi = First_Hanzi_H[:,W_Start:W_End]
+    cv2.imshow('First_Hanzi',First_Hanzi)
 
-# 字符分割
-
-
-
-
-
-# # 轮廓检测
-# contours, hier = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-# i = 0
-# lpchars = []
-# for c in contours:
-#     # 边界框
-#     x, y, w, h = cv2.boundingRect(c)
-#     cv2.rectangle(thresh, (x, y), (x + w, y + h), (255, 0, 0), 2)
- 
-#     print('w' + str(w))
-#     print('h' + str(h))
-#     print(float(w)/h)
-#     print(str(0.8 * thresh.shape[0]))
-#     print('------')
- 
-#     #根据比例和高判断轮廓是否字符
-#     if float(w)/h >= 0.3 and float(w)/h <= 0.8 and h >= 0.6 * thresh.shape[0]:
-#         #将车牌从原图中切割出来
-#         lpImage2 = lpImage[y:y+h, x:x+w]
-#         cv2.imshow(str(i), lpImage2)
-#         i += 1
-#         lpchars.append([x, y, w, h])
- 
-# cv2.imshow('sdd', thresh)
- 
-# if len(lpchars) < 1:
-#     print('未检测到字符!')
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
-#     exit()
- 
-# lpchars = np.array(lpchars)
-# #对x坐标升序，这样，字符顺序就是对的了
-# lpchars = lpchars[lpchars[:,0].argsort()]
-# print(lpchars)
- 
-# #如果识别的字符小于7，说明汉字没识别出来，要单独识别汉字
-# if len(lpchars) < 7:
-#     aveWidth = 0
-#     aveHeight = 0
-#     aveY = 0
-#     for index in lpchars:
-#         aveY += index[1]
-#         aveWidth += index[2]
-#         aveHeight += index[3]
- 
-#     aveY = aveY/len(lpchars)
-#     aveWidth = aveWidth/len(lpchars)
-#     aveHeight = aveHeight/len(lpchars)
-#     zhCharX = lpchars[0][0] - (lpchars[len(lpchars) - 1][0] - lpchars[0][0]) / (len(lpchars) - 1)
-#     if zhCharX < 0:
-#         zhCharX = 0
- 
-#     print(aveWidth)
-#     print(aveHeight)
-#     print(zhCharX)
-#     print(aveY)
-#     cv2.imshow('img', lpImage[int(aveY):int(aveY + aveHeight), int(zhCharX):int(zhCharX + aveWidth)])
- 
- 
- 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
