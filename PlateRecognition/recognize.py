@@ -2,98 +2,98 @@
 import cv2
 import numpy as np
 
-# def rotateClockWise90(img):
-#     trans_img = cv2.transpose( img )
-#     img90 = cv2.flip(trans_img, -1)
-#     img90 = cv2.flip(img90, 1)
-#     return img90
-
-
-
 #将图片转为灰度图像
-img = cv2.imread('22.png')
+img = cv2.imread('33.png')
+
 #将原图做个备份
 sourceImage = img.copy()
-cv2.imshow('sourceImage', sourceImage)
+
+#高斯模糊滤波器对图像进行模糊处理
+img = cv2.GaussianBlur(img, (3, 3), 0)
+
+# cv2.imshow('sourceImage', sourceImage)
+
 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 转换为灰色通道
 hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # 转换为HSV空间
 
 lower_blue = np.array([100, 100, 100])  # 设定蓝色的阈值下限
 upper_blue = np.array([250, 255, 255])  # 设定蓝色的阈值上限
-#  消除噪声
+
+# 消除噪声
 plate_mask = cv2.inRange(hsv_img, lower_blue, upper_blue)  # 设定掩膜取值范围
+blue_mask = plate_mask.copy()
+# cv2.imshow('blue',plate_mask)
 
-cv2.imshow('blue',plate_mask)
-
-#高斯模糊滤波器对图像进行模糊处理
-img = cv2.GaussianBlur(img, (3, 3), 0)
-# cv2.imshow('GaussianBlur',img)
  
-#指定核大小，如果效果不佳，可以试着将核调大
-kernelX = cv2.getStructuringElement(cv2.MORPH_RECT, (15, 1))
-kernelY = cv2.getStructuringElement(cv2.MORPH_RECT, (1, 15))
-#对图像进行膨胀腐蚀处理
-plate_mask = cv2.dilate(plate_mask, kernelY, anchor=(-1, -1), iterations=1)
-plate_mask = cv2.dilate(plate_mask, kernelX, anchor=(-1, -1), iterations=1)
+# 指定核大小，如果效果不佳，可以试着将核调大
+kernel_dilate = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+kernel_erode = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+# 对图像进行膨胀腐蚀处理
+# plate_mask = cv2.dilate(plate_mask, kernelY, anchor=(-1, -1), iterations=1)
+plate_mask = cv2.dilate(plate_mask, kernel_dilate, anchor=(-1, -1), iterations=1)
+# plate_mask = cv2.erode(plate_mask, kernel_erode, anchor=(-1, -1), iterations=2)
 
-#再对图像进行模糊处理
+
+# 再对图像进行模糊处理
 plate_mask = cv2.medianBlur(plate_mask, 9)
-cv2.imshow('dilate',plate_mask)
-cv2.imshow('plate',plate_mask*gray_img)
-
+# cv2.imshow('dilate',plate_mask)
 
 # 图像扶正
-# https://blog.csdn.net/HUXINY/article/details/89467344
+edge = cv2.Canny(plate_mask, 30, 120, 3) # 边缘检测
+# cv2.imshow('edge',edge)
+
+
+# 检测轮廓
+# 输入的三个参数分别为：输入图像、层次类型、轮廓逼近方法
+# 返回的两个返回值分别为：图轮廓、层次
+contours, hier = cv2.findContours(plate_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+
+reg_plate = None
+if len(contours)>0:
+    contours = sorted(contours, key=cv2.contourArea, reverse=True) # 根据轮廓面积从大到小排序
+    for c in contours:
+        peri = cv2.arcLength(c, True) # 计算轮廓周长
+        approx = cv2.approxPolyDP(c, 0.09*peri, True) # 轮廓多边形拟合
+
+        # # 调试用
+        # for peak in approx:
+        #     peak = peak[0] # 顶点坐标
+        #     print(peak)
+        #     cv2.circle(sourceImage, tuple(peak), 10, (0, 0, 255),2) # 绘制顶点
+        # cv2.imshow('ss',sourceImage)
+
+        # 轮廓为4个点表示找到车牌
+        if len(approx) == 4:
+            src = np.float32([approx[0][0],approx[1][0],approx[2][0],approx[3][0]])
+            width = 250
+            length = 450
+            side = 15
+            dst = np.float32([[0, 0], [0, width],  [length, width],[length, 0]])
+            m = cv2.getPerspectiveTransform(src, dst)
+            reg_plate = cv2.warpPerspective(blue_mask, m, (length, width))
+            # 裁切掉边框干扰
+            reg_plate = reg_plate[int(side):int(width-side),int(side):int(length-side)]
+
+if reg_plate is None:
+    print('未检测到棋子')
+else:
+    print('检测到棋子')
+    # cv2.imshow("reg_plate", reg_plate)
+
+# 边缘检测
+lpImage = cv2.Canny(reg_plate, 500, 200, 3)
+
+# 对图像进行二值化操作
+ret, thresh = cv2.threshold(lpImage.copy(), 127, 255, cv2.THRESH_BINARY)
+cv2.imshow('thresh', thresh)
+
+# 字符分割
 
 
 
 
 
-
-
-
-
-
-
-
-
- 
-#检测轮廓，
-#输入的三个参数分别为：输入图像、层次类型、轮廓逼近方法
-#因为这个函数会修改输入图像，所以上面的步骤使用copy函数将原图像做一份拷贝，再处理
-#返回的两个返回值分别为：图轮廓、层次
-# contours, hier = cv2.findContours(plate_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
-# for c in contours:
-#     # 边界框
-#     x, y, w, h = cv2.boundingRect(c)
-
-#     cv2.rectangle(img, (x, y), (x + w, y + h), (255, 0, 0), 2)
-#     print('w' + str(w))
-#     print('h' + str(h))
-#     print(float(w)/h)
-#     print('------')
-#     #由于国内普通小车车牌的宽高比为3.14，所以，近似的认为，只要宽高比大于2.2且小于4的则认为是车牌
-#     if (float(w)/h >= 2.2 and float(w)/h <= 4.0) or (float(h)/w >= 2.2 and float(h)/w <= 4.0):
-#         #将车牌从原图中切割出来
-#         lpImage = sourceImage[y:y+h, x:x+w]
-#         if w<h:
-#             lpImage = rotateClockWise90(lpImage)
-
-#         cv2.imshow('lpImage',lpImage)
- 
-# if 'lpImage' not in dir():
-#     print('未检测到车牌!')
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
-#     exit()
- 
-# cv2.imshow('chepai', lpImage)
-# #边缘检测
-# lpImage = cv2.Canny(lpImage, 500, 200, 3)
-# #对图像进行二值化操作
-# ret, thresh = cv2.threshold(lpImage.copy(), 127, 255, cv2.THRESH_BINARY)
-# #轮廓检测
+# # 轮廓检测
 # contours, hier = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 # i = 0
 # lpchars = []
