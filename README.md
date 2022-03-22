@@ -1,4 +1,14 @@
 # SmartRobotCreativityContest
+### update
+
+tensorflow-gpu环境配置
+
+python 3.6~3.9 + tenserflow-gpu 2.6.x + CUDA 11.2 + cuDNN 8.1
+
+
+
+-------------------------------------------------------
+
 ## 主题一 智能军棋暗棋裁判
 
 #### 核心功能：比军棋大小
