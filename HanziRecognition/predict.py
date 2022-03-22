@@ -1,13 +1,4 @@
-from keras.preprocessing.image import ImageDataGenerator
-from matplotlib import pyplot as plt
 from tensorflow.keras.models import load_model
-
-from keras.models import Sequential
-from keras.layers import Conv2D, MaxPooling2D
-from keras.layers import Activation, Dropout, Flatten, Dense
-from tensorflow.keras.optimizers import SGD
-from keras.callbacks import ModelCheckpoint,EarlyStopping,ReduceLROnPlateau
-
 from keras.preprocessing import image
 import numpy as np
 
@@ -23,13 +14,13 @@ img = image.load_img(img_path, grayscale=True, target_size=(img_width, img_heigh
 x = image.img_to_array(img)
 x = np.expand_dims(x, axis=0)
 x /= 255
-print(x.shape)
+# print(x.shape)
 
 model = load_model(save_model_path)
 
 # 进行预测,返回分类结果
 classes = model.predict(x)
-print(classes)
+# print(classes) # 输出概率值
 
 pre_class=np.argmax(classes,axis=-1)
 

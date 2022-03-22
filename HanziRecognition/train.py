@@ -85,18 +85,18 @@ model = Sequential([
     Conv2D(filters=32, kernel_size=3, padding='same', activation='relu', input_shape=input_shape),
     MaxPooling2D(pool_size=2),
 
-    Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
-    MaxPooling2D(pool_size=2),
+    # Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
+    # MaxPooling2D(pool_size=2),
 
-    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
-    MaxPooling2D(pool_size=2),
+    # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
+    # MaxPooling2D(pool_size=2),
 
-    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
-    MaxPooling2D(pool_size=2),
+    # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
+    # MaxPooling2D(pool_size=2),
 
     Flatten(),
 
-    Dense(64, activation='relu'),
+    # Dense(64, activation='relu'),
 
     Dense(12, activation='softmax')
 ])
