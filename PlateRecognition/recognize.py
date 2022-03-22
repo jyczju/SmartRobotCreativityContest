@@ -1,4 +1,3 @@
-from tkinter import N
 import cv2
 import numpy as np
 
@@ -46,11 +45,12 @@ def getVProjection(image):
     return W
 
 
-img = cv2.imread('44.png') # 读取图片
+img = cv2.imread('55.png') # 读取图片
+nameofpng = 'shizhang.jpg'
 sourceImage = img.copy() # 将原图做个备份
 
 img = cv2.GaussianBlur(img, (3, 3), 0) # 高斯模糊滤波器对图像进行模糊处理
-cv2.imshow('sourceImage', sourceImage)
+# cv2.imshow('sourceImage', sourceImage)
 
 gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 转换为灰色通道
 hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # 转换为HSV空间
@@ -97,17 +97,29 @@ if len(contours)>0:
         #     cv2.circle(sourceImage, tuple(peak), 10, (0, 0, 255),2) # 绘制顶点
         # cv2.imshow('ss',sourceImage)
 
+        # cv2.circle(sourceImage, approx[0][0], 10, (0, 0, 255),2) # 绘制顶点
+        # cv2.imshow('ss',sourceImage)
+
         # 轮廓为4个点表示找到棋子
         if len(approx) == 4: # 此处还可加上长宽比判据
             src = np.float32([approx[0][0],approx[1][0],approx[2][0],approx[3][0]]) # 原图的四个顶点
+            dist01square = (approx[0][0][0]-approx[1][0][0])**2 + (approx[0][0][1]-approx[1][0][1])**2
+            dist03square = (approx[0][0][0]-approx[3][0][0])**2 + (approx[0][0][1]-approx[3][0][1])**2
+
             width = 250
             length = 450
             side = 15
-            dst = np.float32([[0,0], [0,width], [length,width], [length,0]]) # 期望的四个顶点
+
+            if dist01square < dist03square:
+                dst = np.float32([[0,0], [0,width], [length,width], [length,0]]) # 期望的四个顶点
+            else:
+                dst = np.float32([[length,0], [0,0], [0,width], [length,width]]) # 期望的四个顶点
+            
             m = cv2.getPerspectiveTransform(src, dst) # 生成旋转矩阵
             reg_plate = cv2.warpPerspective(blue_mask, m, (length, width)) # 旋转后的图像
             _, reg_plate = cv2.threshold(reg_plate, 127, 255, cv2.THRESH_BINARY) # 对图像进行二值化操作
             reg_plate = reg_plate[int(side):int(width-side),int(side):int(length-side)] # 裁切掉边框干扰
+            # cv2.imshow('reg_plate',reg_plate)
 
 if reg_plate is None:
     print('未检测到棋子')
@@ -147,14 +159,24 @@ else:
         if W[i] <= 0 and W_Start is not None:
             W_End =i # 寻找结束点
         if W_Start is not None and W_End is not None:
-            if (W_End-W_Start)<0.35*len(W): # 排除偏旁干扰
+            # if (W_End-W_Start)<0.35*len(W): # 排除偏旁干扰
+            if (W_End-W_Start)<0.8*len(W): # 排除偏旁干扰
                 continue
             else:
                 break
 
-    # 根据确定的位置分割出第一个字符
+    # 根据确定的位置分割出第一个字符,but军旗与军长怎么区分
     First_Hanzi = First_Hanzi_H[:,W_Start:W_End]
+
+    a = 100
+    h = First_Hanzi.shape[0]
+    w = First_Hanzi.shape[1]
+    src = np.float32([[0,0], [0,h], [w,h], [w,0]]) # 原图的四个顶点
+    dst = np.float32([[0,0], [0,a], [2*a,a], [2*a,0]]) # 期望的四个顶点
+    m = cv2.getPerspectiveTransform(src, dst) # 生成旋转矩阵
+    First_Hanzi = cv2.warpPerspective(First_Hanzi, m, (2*a, a)) # 旋转后的图像
     cv2.imshow('First_Hanzi',First_Hanzi)
+    cv2.imwrite(nameofpng, First_Hanzi)
 
 cv2.waitKey(0)
 cv2.destroyAllWindows()
