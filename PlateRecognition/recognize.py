@@ -45,8 +45,8 @@ def getVProjection(image):
     return W
 
 
-img = cv2.imread('55.png') # 读取图片
-nameofpng = 'shizhang.jpg'
+img = cv2.imread('88.png') # 读取图片
+nameofpng = 'lvzhang.jpg'
 sourceImage = img.copy() # 将原图做个备份
 
 img = cv2.GaussianBlur(img, (3, 3), 0) # 高斯模糊滤波器对图像进行模糊处理
@@ -127,6 +127,8 @@ else:
     print('检测到棋子')
     # cv2.imshow("reg_plate", reg_plate)
 
+
+    _, reg_plate = cv2.threshold(reg_plate, 127, 255, cv2.THRESH_BINARY) # 对图像进行二值化操作
     lpImage = cv2.Canny(reg_plate, 500, 200, 3) # 边缘检测
     ret, thresh = cv2.threshold(lpImage.copy(), 127, 255, cv2.THRESH_BINARY) # 对图像进行二值化操作
     # cv2.imshow('thresh', thresh)
@@ -165,8 +167,9 @@ else:
             else:
                 break
 
-    # 根据确定的位置分割出第一个字符,but军旗与军长怎么区分
-    First_Hanzi = First_Hanzi_H[:,W_Start:W_End]
+    # 根据确定的位置分割出第一个字符
+    # First_Hanzi = First_Hanzi_H[:,W_Start:W_End] # 空心字
+    First_Hanzi = reg_plate_H[:,W_Start:W_End] # 实心字
 
     a = 100
     h = First_Hanzi.shape[0]

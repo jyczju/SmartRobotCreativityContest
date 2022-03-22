@@ -21,11 +21,16 @@ def ensure_dir(dir_path):
  
 # 图片生成器ImageDataGenerator
 pic_gen = ImageDataGenerator(
-    rotation_range=10,
-    width_shift_range=0.1,
-    height_shift_range=0.1,
-    shear_range=0.2,
-    zoom_range=0.2,
+    rotation_range=5,
+    width_shift_range=0.03,
+    height_shift_range=0.03,
+    # shear_range=0.2,
+    # zoom_range=0.2,
+    # rotation_range=0,
+    # width_shift_range=0,
+    # height_shift_range=0,
+    # shear_range=0,
+    # zoom_range=0,
     fill_mode='nearest')
  
 # 生成图片
@@ -49,20 +54,20 @@ def img_create(img_dir, save_dir, img_prefix, num=100):
 
 qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan']
 # 生成训练集
-for i in range(1, 12):
+for i in range(0, 12):
     img_prefix = qizi[i]
     img_dir = './qizi_data/' + img_prefix + '.jpg'
-    save_dir = './data/train/' + img_prefix
+    save_dir = './data/train/' + str(i)
     ensure_dir(save_dir)
-    img_create(img_dir, save_dir, img_prefix, num=100)
+    img_create(img_dir, save_dir, str(i), num=200)
     print("train: ", i)
  
  
 # 生成测试集
-for i in range(1, 12):
+for i in range(0, 12):
     img_prefix = qizi[i]
     img_dir = './qizi_data/' + img_prefix + '.jpg'
-    save_dir = './data/validation/' + img_prefix
+    save_dir = './data/validation/' + str(i)
     ensure_dir(save_dir)
-    img_create(img_dir, save_dir, img_prefix, num=50)
+    img_create(img_dir, save_dir, str(i), num=80)
     print("validation: ", i)
