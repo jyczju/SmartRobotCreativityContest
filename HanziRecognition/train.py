@@ -88,11 +88,11 @@ model = Sequential([
     # Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
     # MaxPooling2D(pool_size=2),
 
-    # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
-    # MaxPooling2D(pool_size=2),
+    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
+    MaxPooling2D(pool_size=2),
 
-    # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
-    # MaxPooling2D(pool_size=2),
+    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
+    MaxPooling2D(pool_size=2),
 
     Flatten(),
 
@@ -103,9 +103,9 @@ model = Sequential([
 
 
  
-sgd = SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
+# sgd = SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 # model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.00004), metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.00002), metrics=['accuracy'])
 
 
 model.summary()
@@ -121,8 +121,6 @@ early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=3,verbos
 # 保存最佳训练参数
 # checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
 checkpointer = ModelCheckpoint(filepath=save_model_path, monitor='val_accuracy',verbose=2,save_best_only=True,save_weights_only=False,mode='auto')
-
-# model.load_weights('./tmp/weights.hdf5')
 
 # 设置训练参数
 nb_train_samples = 50
