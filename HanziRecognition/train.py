@@ -116,7 +116,7 @@ save_model_path = "results/temp.h5"  # 保存模型路径和名称
 # lr_reduce = ReduceLROnPlateau('val_accuracy',patience=3,factor=0.1,min_lr=0.000001)
 
 
-early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=3,verbose=1)
+early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=5,verbose=1)
 
 # 保存最佳训练参数
 # checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
