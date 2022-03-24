@@ -88,11 +88,11 @@ model = Sequential([
     # Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
     # MaxPooling2D(pool_size=2),
 
-    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
-    MaxPooling2D(pool_size=2),
+    # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
+    # MaxPooling2D(pool_size=2),
 
-    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
-    MaxPooling2D(pool_size=2),
+    # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
+    # MaxPooling2D(pool_size=2),
 
     Flatten(),
 
@@ -105,7 +105,7 @@ model = Sequential([
  
 # sgd = SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 # model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.00002), metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.00001), metrics=['accuracy'])
 
 
 model.summary()

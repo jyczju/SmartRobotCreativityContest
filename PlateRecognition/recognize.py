@@ -46,8 +46,8 @@ def getVProjection(image):
     return W
 
 
-img = cv2.imread('zhadan1.jpg')  # 读取图片
-nameofpng = 'zhadan.jpg'
+img = cv2.imread('test2.jpg')  # 读取图片
+nameofpng = 'test.jpg'
 sourceImage = img.copy()  # 将原图做个备份
 
 img = cv2.GaussianBlur(img, (3, 3), 0)  # 高斯模糊滤波器对图像进行模糊处理
@@ -59,9 +59,9 @@ gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)  # 转换为灰色通道
 
 # 用于调整二值化参数
 # cv2.imshow('gray_img1', gray_img)
-THRESHOLD_OF_GRAY = 50
-# _, gray_img = cv2.threshold(gray_img, THRESHOLD_OF_GRAY, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
-# cv2.imshow('gray_img', gray_img)
+THRESHOLD_OF_GRAY = 30
+_, gray_img = cv2.threshold(gray_img, THRESHOLD_OF_GRAY, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
+cv2.imshow('gray_img', gray_img)
 
 hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # 转换为HSV空间
 
@@ -168,11 +168,9 @@ else:
     print('检测到棋子')
     # cv2.imshow("reg_plate", reg_plate)
 
-    _, reg_plate = cv2.threshold(
-        reg_plate, 127, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
+    # _, reg_plate = cv2.threshold(reg_plate, 127, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
     lpImage = cv2.Canny(reg_plate, 500, 200, 3)  # 边缘检测
-    ret, thresh = cv2.threshold(
-        lpImage.copy(), 127, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
+    ret, thresh = cv2.threshold(lpImage.copy(), 127, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
     # cv2.imshow('thresh', thresh)
 
     # 字符分割

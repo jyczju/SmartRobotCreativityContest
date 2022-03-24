@@ -9,7 +9,7 @@ qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','s
 img_width, img_height = 200, 100
 input_shape = (img_width, img_height,1)
 # img_path = './qizi_data/dilei.jpg'
-img_path = 'test1.jpg'
+img_path = './test/test2.jpg'
 
 img = image.load_img(img_path, color_mode = "grayscale", target_size=(img_width, img_height))
 x = image.img_to_array(img)
