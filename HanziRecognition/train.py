@@ -8,6 +8,7 @@ software: PyCharm
 '''
  
 
+from statistics import mode
 from keras.preprocessing.image import ImageDataGenerator
 from matplotlib import pyplot as plt
 from tensorflow.keras.models import load_model
@@ -60,33 +61,13 @@ validation_flow = validation_pic_gen.flow_from_directory(
     classes=[str(i) for i in range(0,12)],
     class_mode='categorical'
 )
- 
- 
-# 搭建模型
-# model = Sequential()
-
-# model.add(Conv2D(32, (3, 3), activation='relu', input_shape=input_shape))
-# model.add(Conv2D(32, (3, 3), activation='relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Dropout(0.25))
- 
-# model.add(Conv2D(64, (3, 3), activation='relu'))
-# model.add(Conv2D(64, (3, 3), activation='relu'))
-# model.add(MaxPooling2D(pool_size=(2, 2)))
-# model.add(Dropout(0.25))
-
-# model.add(Flatten())
-# model.add(Dense(256, activation='relu'))
-# model.add(Dropout(0.5))
-# model.add(Dense(64, activation='softmax'))
-# model.add(Dense(12))
 
 model = Sequential([
     Conv2D(filters=32, kernel_size=3, padding='same', activation='relu', input_shape=input_shape),
     MaxPooling2D(pool_size=2),
 
-    # Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
-    # MaxPooling2D(pool_size=2),
+    Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
+    MaxPooling2D(pool_size=2),
 
     # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
     # MaxPooling2D(pool_size=2),
@@ -113,10 +94,10 @@ model.summary()
 
 save_model_path = "results/temp.h5"  # 保存模型路径和名称
 
-# lr_reduce = ReduceLROnPlateau('val_accuracy',patience=3,factor=0.1,min_lr=0.000001)
+lr_reduce = ReduceLROnPlateau(monitor='val_accuracy',factor=0.1, patience=3,verbose=1,mode = 'max', min_lr=0.00000001)
 
 
-early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=5,verbose=1)
+early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=8,verbose=1)
 
 # 保存最佳训练参数
 # checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
@@ -125,40 +106,42 @@ checkpointer = ModelCheckpoint(filepath=save_model_path, monitor='val_accuracy',
 # 设置训练参数
 nb_train_samples = 50
 nb_validation_samples = 20
-nb_epoch = 50
+nb_epoch = 100
 
 
 # 数据流训练API
-# history = model.fit(
-#     train_flow,
-#     steps_per_epoch=nb_train_samples,
-#     epochs=nb_epoch,
-#     validation_data=validation_flow,
-#     validation_steps=nb_validation_samples,
-#     callbacks=[lr_reduce,checkpointer,early_stop]
-#     )
-
-
 history = model.fit(
     train_flow,
     steps_per_epoch=nb_train_samples,
     epochs=nb_epoch,
     validation_data=validation_flow,
     validation_steps=nb_validation_samples,
-    callbacks=[checkpointer,early_stop]
+    callbacks=[lr_reduce,checkpointer,early_stop]
     )
+
+
+# history = model.fit(
+#     train_flow,
+#     steps_per_epoch=nb_train_samples,
+#     epochs=nb_epoch,
+#     validation_data=validation_flow,
+#     validation_steps=nb_validation_samples,
+#     callbacks=[checkpointer,early_stop]
+#     )
 
 # print(history.history)
 
 plt.figure(1)
+plt.subplot(121)
 plt.plot(history.history['loss'], label='train_loss')
 plt.plot(history.history['val_loss'], label='val_loss')
+plt.title('loss')
 plt.legend()
-plt.show()
 
-plt.figure(2)
+plt.subplot(122)
 plt.plot(history.history['accuracy'], label='train_accuracy')
 plt.plot(history.history['val_accuracy'], label='val_accuracy')
+plt.title('accuracy')
 plt.legend()
 plt.show()
 

@@ -53,19 +53,19 @@ def img_create(img_dir, save_dir, img_prefix, num=100):
 qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan']
 # 生成训练集
 for i in range(0, 12):
-    img_prefix = qizi[i]
-    img_dir = './qizi_data/' + img_prefix + '.jpg'
-    save_dir = './data/train/' + str(i)
-    ensure_dir(save_dir)
-    img_create(img_dir, save_dir, str(i), num=200)
+    for j in range(0,7):
+       img_dir = './qizi_data/' + qizi[i] + '/' + str(j) +'.jpg'
+       save_dir = './data/train/' + str(i)
+       ensure_dir(save_dir)
+       img_create(img_dir, save_dir, str(i), num=50)
     print("train: ", i)
  
  
 # 生成测试集
 for i in range(0, 12):
-    img_prefix = qizi[i]
-    img_dir = './qizi_data/' + img_prefix + '.jpg'
-    save_dir = './data/validation/' + str(i)
-    ensure_dir(save_dir)
-    img_create(img_dir, save_dir, str(i), num=80)
+    for j in range(0,7):
+       img_dir = './qizi_data/' + qizi[i] + '/' + str(j) +'.jpg'
+       save_dir = './data/validation/' + str(i)
+       ensure_dir(save_dir)
+       img_create(img_dir, save_dir, str(i), num=20)
     print("validation: ", i)
