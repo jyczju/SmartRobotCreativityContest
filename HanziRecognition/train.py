@@ -22,11 +22,12 @@ from keras.callbacks import ModelCheckpoint,EarlyStopping,ReduceLROnPlateau
 qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan']
  
 # 图片尺寸
-img_width, img_height = 200, 100
-input_shape = (img_width, img_height, 1)
+height, width = 100, 200
+input_shape = (height, width, 1)
  
 train_data_dir = './data/train'
 validation_data_dir = './data/validation'
+save_model_path = "results/temp1.h5"  # 保存模型路径和名称
 
 # 图片生成器ImageDataGenerator
 train_pic_gen = ImageDataGenerator(
@@ -42,7 +43,7 @@ validation_pic_gen = ImageDataGenerator(rescale=1. / 255)
 # 按文件夹生成训练集流和标签，
 train_flow = train_pic_gen.flow_from_directory(
     train_data_dir,
-    target_size=(img_width, img_height),
+    target_size=(height, width),
     batch_size=32,
     color_mode='grayscale',
     # color_mode='rgb',
@@ -53,7 +54,7 @@ train_flow = train_pic_gen.flow_from_directory(
 # 按文件夹生成测试集流和标签，
 validation_flow = validation_pic_gen.flow_from_directory(
     validation_data_dir,
-    target_size=(img_width, img_height),
+    target_size=(height, width),
     batch_size=32,
     color_mode='grayscale',
     # color_mode='rgb',
@@ -91,8 +92,6 @@ model.compile(loss='categorical_crossentropy', optimizer=Adam(lr=0.00001), metri
 
 model.summary()
 
-
-save_model_path = "results/temp.h5"  # 保存模型路径和名称
 
 lr_reduce = ReduceLROnPlateau(monitor='val_accuracy',factor=0.1, patience=3,verbose=1,mode = 'max', min_lr=0.00000001)
 
