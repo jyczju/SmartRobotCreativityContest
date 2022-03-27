@@ -15,7 +15,7 @@ python 3.6~3.9 + tenserflow-gpu 2.6.x + CUDA 11.2 + cuDNN 8.1
 
 ##### 1.硬件
 
-显示屏x2，透明亚克力板，短焦摄像头，舵机（二维），灯光显示（激光笔？）、树莓派、Arduino、语音模块
+显示屏，透明亚克力板，短焦摄像头，舵机，树莓派、Arduino、语音模块
 
 <img src="D:\浙江大学\科研竞赛\SmartRobotCreativityContest\SmartRobotCreativityContest\IMG_0692.PNG" alt="IMG_0692" style="zoom:60%;" />
 
@@ -23,11 +23,9 @@ python 3.6~3.9 + tenserflow-gpu 2.6.x + CUDA 11.2 + cuDNN 8.1
 
 ##### 2.软件
 
-短焦摄像头畸变校正
+棋子位置识别+扣选done
 
-棋子位置识别+扣选
-
-棋子文字识别
+棋子文字识别done
 
 棋子大小判断
 
