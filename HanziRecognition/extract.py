@@ -24,6 +24,7 @@ def getHProjection(img):
 
     return H
 
+
 def getVProjection(img):
     '''垂直投影'''
     # 图像高与宽
@@ -45,6 +46,7 @@ def getVProjection(img):
 
     return W
 
+
 def Cut_H(img, H):
     '''缩减上下间距'''
     H_Start = None
@@ -59,7 +61,7 @@ def Cut_H(img, H):
                 continue
             else:
                 break
-    
+
     if H_Start is not None and H_End is not None:
         if (H_End-H_Start) < 0.8*len(H):  # 排除偏旁干扰
             H_End = len(H)-1
@@ -67,6 +69,7 @@ def Cut_H(img, H):
         img = img[H_Start:H_End, :]
         # First_Hanzi_H = thresh[H_Start:H_End, :]
     return img
+
 
 def Cut_W(img, W):
     '''缩减左右间距'''
@@ -78,12 +81,12 @@ def Cut_W(img, W):
         if W[i] <= 0 and W_Start is not None:
             W_End = i  # 寻找结束点
         if W_Start is not None and W_End is not None:
-                # if (W_End-W_Start)<0.35*len(W): # 排除偏旁干扰
+            # if (W_End-W_Start)<0.35*len(W): # 排除偏旁干扰
             if (W_End-W_Start) < 0.8*len(W):  # 排除偏旁干扰
                 continue
             else:
                 break
-    
+
     if W_Start is not None and W_End is not None:
         if (W_End-W_Start) < 0.8*len(W):  # 排除偏旁干扰
             W_End = len(W)-1
@@ -91,6 +94,7 @@ def Cut_W(img, W):
         # First_Hanzi = First_Hanzi_H[:,W_Start:W_End] # 空心字
         img = img[:, W_Start:W_End]  # 实心字
     return img
+
 
 def Revise_HW(img, ah, aw):
     '''对图像进行长宽比校正'''
@@ -102,6 +106,7 @@ def Revise_HW(img, ah, aw):
     img = cv2.warpPerspective(img, m, (aw, ah))  # 旋转后的图像
     return img
 
+
 def Dilate_Erode(img, size_dilate, size_erode):
     '''膨胀腐蚀处理'''
     # 指定核大小，如果效果不佳，可以试着将核调大
@@ -109,12 +114,12 @@ def Dilate_Erode(img, size_dilate, size_erode):
     kernel_erode = cv2.getStructuringElement(cv2.MORPH_RECT, size_erode)
 
     # 对图像进行膨胀腐蚀处理
-    img = cv2.erode(img, kernel_erode,anchor=(-1, -1), iterations=1)  # 腐蚀
-    img = cv2.dilate(img, kernel_dilate,anchor=(-1, -1), iterations=2)  # 膨胀
-    img = cv2.erode(img, kernel_erode,anchor=(-1, -1), iterations=1)  # 腐蚀
+    img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=1)  # 腐蚀
+    img = cv2.dilate(img, kernel_dilate, anchor=(-1, -1), iterations=2)  # 膨胀
+    img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=1)  # 腐蚀
     # plate_mask = cv2.Canny(img, 30, 120, 3)
-    img = cv2.dilate(img, kernel_dilate,anchor=(-1, -1), iterations=2)  # 膨胀
-    img = cv2.erode(img, kernel_erode,anchor=(-1, -1), iterations=2)  # 腐蚀
+    img = cv2.dilate(img, kernel_dilate, anchor=(-1, -1), iterations=2)  # 膨胀
+    img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=2)  # 腐蚀
     # plate_mask = cv2.dilate(img, kernel_dilate,anchor=(-1, -1), iterations=2)  # 膨胀
     # plate_mask = cv2.erode(img, kernel_erode,anchor=(-1, -1), iterations=4)  # 腐蚀
     # plate_mask = cv2.dilate(img, kernel_dilate,anchor=(-1, -1), iterations=5)  # 膨胀
@@ -123,10 +128,11 @@ def Dilate_Erode(img, size_dilate, size_erode):
     # plate_mask = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=2) # 腐蚀
     return img
 
-def recognize(img):
+
+def extract_qizi(img):
     '''提取棋子区域'''
     sourceImage = img.copy()
-    First_Hanzi = None
+    qizi_Hanzi = None
     img = cv2.GaussianBlur(img, (3, 3), 0)  # 高斯模糊滤波器对图像进行模糊处理
     # cv2.imshow('sourceImage', sourceImage)
 
@@ -142,38 +148,42 @@ def recognize(img):
 
     # lower_blue = np.array([100, 30, 70])  # 设定蓝色的阈值下限
     # upper_blue = np.array([250, 235, 255])  # 设定蓝色的阈值上限
-    lower_red1 = np.array([0, 43, 46])  # 设定红色的阈值下限
+    lower_red1 = np.array([0, 50, 50])  # 设定红色的阈值下限
     upper_red1 = np.array([5, 250, 255])  # 设定红色的阈值上限
-    lower_red2 = np.array([175, 43, 46])  # 设定红色的阈值下限
+    lower_red2 = np.array([175, 50, 50])  # 设定红色的阈值下限
     upper_red2 = np.array([180, 250, 255])  # 设定红色的阈值上限
 
     # 消除噪声
     # plate_mask = cv2.inRange(hsv_img, lower_blue, upper_blue)  # 设定掩膜取值范围
-    plate_mask = cv2.inRange(hsv_img, lower_red1, upper_red1) + cv2.inRange(hsv_img, lower_red2, upper_red2)  # 设定掩膜取值范围
-    hsv_mask = plate_mask.copy()
+    plate_mask = cv2.inRange(hsv_img, lower_red1, upper_red1) + \
+        cv2.inRange(hsv_img, lower_red2, upper_red2)  # 设定掩膜取值范围
+    # hsv_mask = plate_mask.copy()
     # cv2.imshow('hsv_mask', hsv_mask)
 
-    plate_mask = Dilate_Erode(plate_mask, size_dilate=(5, 5), size_erode=(5, 5)) # 膨胀腐蚀处理
+    plate_mask = Dilate_Erode(plate_mask, size_dilate=(
+        5, 5), size_erode=(5, 5))  # 膨胀腐蚀处理
 
     # 再对图像进行模糊处理
     plate_mask = cv2.medianBlur(plate_mask, 9)
-    # cv2.imshow('dilate', plate_mask)
+    cv2.imshow('dilate', plate_mask)
 
     # 图像扶正
-    edge = cv2.Canny(plate_mask, 30, 120, 3)  # 边缘检测
+    # edge = cv2.Canny(plate_mask, 30, 120, 3)  # 边缘检测
     # cv2.imshow('edge',edge)
 
-    contours, hier = cv2.findContours(plate_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 检测轮廓
+    contours, hier = cv2.findContours(
+        plate_mask.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)  # 检测轮廓
 
     reg_plate = None
     if len(contours) > 0:
-        contours = sorted(contours, key=cv2.contourArea,reverse=True)  # 根据轮廓面积从大到小排序
+        contours = sorted(contours, key=cv2.contourArea,
+                          reverse=True)  # 根据轮廓面积从大到小排序
         for c in contours:
 
             peri = cv2.arcLength(c, True)  # 计算轮廓周长
             # print(peri)
             if peri < 400 or peri > 700:
-                continue # 周长不合要求，跳过
+                continue  # 周长不合要求，跳过
 
             # area = cv2.contourArea(c) # 计算轮廓面积
             # # print(area)
@@ -189,38 +199,46 @@ def recognize(img):
             #     cv2.circle(sourceImage, tuple(peak), 10, (0, 0, 255),2) # 绘制顶点
             # cv2.imshow('ss',sourceImage)
 
-            if len(approx) == 4: # 轮廓为4个点表示找到棋子
-                dist01square = (approx[0][0][0]-approx[1][0][0])**2 + (approx[0][0][1]-approx[1][0][1])**2
-                dist03square = (approx[0][0][0]-approx[3][0][0])**2 + (approx[0][0][1]-approx[3][0][1])**2
+            if len(approx) == 4:  # 轮廓为4个点表示找到棋子
+                dist01square = (approx[0][0][0]-approx[1][0][0]
+                                )**2 + (approx[0][0][1]-approx[1][0][1])**2
+                dist03square = (approx[0][0][0]-approx[3][0][0]
+                                )**2 + (approx[0][0][1]-approx[3][0][1])**2
                 # print(dist01square,dist03square)
 
                 if (float(dist01square)/dist03square > 1**2 and float(dist01square)/dist03square < 2.1**2) or (float(dist03square)/dist01square > 1**2 and float(dist03square)/dist01square < 2.1**2):
                     # 调试用
                     for peak in approx:
                         peak = peak[0]  # 顶点坐标
-                        cv2.circle(sourceImage, tuple(peak),10, (0, 0, 255), 2)  # 绘制顶点
+                        cv2.circle(sourceImage, tuple(peak),
+                                   10, (0, 0, 255), 2)  # 绘制顶点
                     cv2.imshow('ss', sourceImage)
 
-                    src = np.float32([approx[0][0], approx[1][0],approx[2][0], approx[3][0]])  # 原图的四个顶点
+                    src = np.float32(
+                        [approx[0][0], approx[1][0], approx[2][0], approx[3][0]])  # 原图的四个顶点
 
                     width = 255
                     length = 455
                     side = 5
 
                     if dist01square < dist03square:
-                        dst = np.float32([[0, 0], [0, width], [length, width], [length, 0]])  # 期望的四个顶点
+                        dst = np.float32(
+                            [[0, 0], [0, width], [length, width], [length, 0]])  # 期望的四个顶点
                     else:
-                        dst = np.float32([[length, 0], [0, 0], [0, width], [length, width]])  # 期望的四个顶点
+                        dst = np.float32([[length, 0], [0, 0], [0, width], [
+                                         length, width]])  # 期望的四个顶点
 
                     m = cv2.getPerspectiveTransform(src, dst)  # 生成旋转矩阵
-                    reg_plate = cv2.warpPerspective(gray_img, m, (length, width))  # 旋转后的图像
-                
+                    reg_plate = cv2.warpPerspective(
+                        gray_img, m, (length, width))  # 旋转后的图像
+
                     # _, reg_plate = cv2.threshold(reg_plate, THRESHOLD_OF_GRAY, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
-                    reg_plate = cv2.equalizeHist(reg_plate) # 直方图均衡化
+                    reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
                     # reg_plate = cv2.medianBlur(reg_plate,5)
 
-                    reg_plate = reg_plate[int(side):int(width-side), int(side):int(length-side)]  # 裁切掉边框干扰
-                    
+                    reg_plate = reg_plate[int(side):int(
+                        width-side), int(side):int(length-side)]  # 裁切掉边框干扰
+
                     # cv2.imshow('reg_plate', reg_plate)
 
                     # print(peri)
@@ -233,15 +251,16 @@ def recognize(img):
 
         # 字符分割
         H = getHProjection(reg_plate)  # 水平投影
-        reg_plate_H = Cut_H(reg_plate, H) # 缩减上下间距
+        reg_plate_H = Cut_H(reg_plate, H)  # 缩减上下间距
         # cv2.imshow('reg_plate_H',reg_plate_H)
 
         W = getVProjection(reg_plate_H)  # 垂直投影
-        First_Hanzi = Cut_W(reg_plate_H, W) # 缩减左右间距
+        qizi_Hanzi = Cut_W(reg_plate_H, W)  # 缩减左右间距
 
-        First_Hanzi = Revise_HW(First_Hanzi, ah = 100 , aw = 200) # 对图像进行长宽比校正
-        
-    return First_Hanzi
+        qizi_Hanzi = Revise_HW(qizi_Hanzi, ah=100, aw=200)  # 对图像进行长宽比校正
+
+    return qizi_Hanzi
+
 
 def ensure_dir(dir_path):
     '''生成文件夹'''
@@ -252,40 +271,38 @@ def ensure_dir(dir_path):
             pass
 
 
+if __name__ == '__main__':
 
-qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan']
+    qizi = ['dilei', 'gongbin', 'junqi', 'junzhang', 'lianzhang', 'lvzhang',
+            'paizhang', 'shizhang', 'siling', 'tuanzhang', 'yinzhang', 'zhadan']
 
+    # for i in range(0, 12):
+    #     for j in range(0, 7):
+    #         img_dir = './new_junqi/' + qizi[i] + '/' + str(j) + '.jpg'
+    #         save_dir = './qizi_data/' + qizi[i]
+    #         ensure_dir(save_dir)
+    #         save_dir = save_dir + '/' + str(j) + '.jpg'
+    #         img = cv2.imread(img_dir)  # 读取图片
+    #         # cv2.imshow('img', img)
+    #         First_Hanzi = extract_qizi(img)
+    #         if First_Hanzi is None:
+    #             print('Failed')
+    #         else:
+    #             print('Success')
+    #             # cv2.imshow('First_Hanzi', First_Hanzi)
+    #             cv2.imwrite(save_dir, First_Hanzi)
 
-# for i in range(0,12):
-#     for j in range(0,7):
-#         img_dir = './new_junqi/' + qizi[i] +'/' + str(j) +'.jpg'
-#         save_dir = './qizi_data/' + qizi[i]
-#         ensure_dir(save_dir)
-#         save_dir = save_dir + '/' + str(j) +'.jpg'
-#         img = cv2.imread(img_dir)  # 读取图片
-#         # cv2.imshow('img', img)
-#         First_Hanzi = recognize(img)
-#         if First_Hanzi is None:
-#             print('Failed')
-#         else:
-#             print('Success')
-#             # cv2.imshow('First_Hanzi', First_Hanzi)
-#             cv2.imwrite(save_dir, First_Hanzi)
+    img = cv2.imread('./new_junqi/yinzhang/5.jpg')  # 读取图片
+    nameofpng = './qizi_data/yinzhang/5.jpg'
+    sourceImage = img.copy()  # 将原图做个备份
 
+    First_Hanzi = extract_qizi(img)
+    if First_Hanzi is None:
+        print('提取棋子失败')
+    else:
+        print('提取棋子成功')
+        cv2.imshow('First_Hanzi', First_Hanzi)
+        cv2.imwrite(nameofpng, First_Hanzi)
 
-img = cv2.imread('./new_junqi/yinzhang/5.jpg')  # 读取图片
-nameofpng = './qizi_data/yinzhang/5.jpg'
-sourceImage = img.copy()  # 将原图做个备份
-
-First_Hanzi = recognize(img)
-if First_Hanzi is None:
-    print('提取棋子失败')
-else:
-    print('提取棋子成功')
-    cv2.imshow('First_Hanzi', First_Hanzi)
-    cv2.imwrite(nameofpng, First_Hanzi)
-
-    
-
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
