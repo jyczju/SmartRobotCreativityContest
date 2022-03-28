@@ -232,8 +232,7 @@ def extract_red(img):
                     reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
                     # reg_plate = cv2.medianBlur(reg_plate,5)
 
-                    reg_plate = reg_plate[int(side):int(
-                        width-side), int(side):int(length-side)]  # 裁切掉边框干扰
+                    reg_plate = reg_plate[int(side):int(width-side), int(side):int(length-side)]  # 裁切掉边框干扰
 
                     # cv2.imshow('reg_plate', reg_plate)
 
