@@ -21,9 +21,9 @@ def ensure_dir(dir_path):
  
 # 图片生成器ImageDataGenerator
 pic_gen = ImageDataGenerator(
-    rotation_range=10,
-    shear_range=0.5,
-    zoom_range=0.5,
+    rotation_range=5,
+    shear_range=0.2,
+    zoom_range=0.2,
     # rotation_range=0,
     # width_shift_range=0,
     # height_shift_range=0,
@@ -54,24 +54,24 @@ qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','s
 # 生成训练集
 for i in range(0, 12):
     save_dir = './data/train/' + qizi[i] #str(i) # 保存文件夹
-    img_dir = './qizi_data/' + qizi[i] # 来源文件夹
+    img_dir = './extract_img/red/' + qizi[i] # 来源文件夹
     for _, _, files in os.walk(img_dir):
         # 遍历文件
         for f in files:
             img_file_dir = img_dir + '/' + f
             ensure_dir(save_dir)
-            img_create(img_file_dir, save_dir, 'red'+str(i), num=50)
+            img_create(img_file_dir, save_dir, 'red_'+qizi[i], num=50)
     print("train: ", i)
  
  
 # 生成测试集
 for i in range(0, 12):
     save_dir = './data/validation/' + qizi[i] #str(i)
-    img_dir = './qizi_data/' + qizi[i]
+    img_dir = './extract_img/red/' + qizi[i]
     for _, _, files in os.walk(img_dir):
         # 遍历文件
         for f in files:
             img_file_dir = img_dir + '/' + f
             ensure_dir(save_dir)
-            img_create(img_file_dir, save_dir, 'red'+str(i), num=20)
+            img_create(img_file_dir, save_dir, 'red_'+qizi[i], num=20)
     print("validation: ", i)

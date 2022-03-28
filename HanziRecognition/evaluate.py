@@ -24,9 +24,9 @@ def evaluate(model, test_path):
         print(qizi[i],':',right_rate)
 
 if __name__ == '__main__':
-    save_model_path = "results/Best2CNN100.h5"  # 保存模型路径和名称
+    save_model_path = "results/temp.h5"  # 保存模型路径和名称
     model = load_model(save_model_path)
-    test_path = './test_data'
+    test_path = './data/test'
 
     evaluate(model, test_path)
 
