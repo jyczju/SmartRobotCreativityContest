@@ -21,11 +21,11 @@ def ensure_dir(dir_path):
  
 # 图片生成器ImageDataGenerator
 pic_gen = ImageDataGenerator(
-    rotation_range=0.01, # 1
-    width_shift_range=0.01, # 0
-    height_shift_range=0.01, # 0
-    shear_range=0.01, # 0.2
-    zoom_range=0.01, # 0.2
+    rotation_range=5, 
+    width_shift_range=0, # 0
+    height_shift_range=0, # 0
+    shear_range=0.1, # 0.2
+    zoom_range=0.1, # 0.2
     fill_mode='nearest')
  
 # 生成图片
@@ -38,7 +38,7 @@ def img_create(img_dir, save_dir, img_prefix, num=100):
         batch_size=1,
         save_to_dir=save_dir,
         save_prefix=img_prefix,
-        save_format="png"
+        save_format="jpg"
     )
     i = 0
     for batch in img_flow:
