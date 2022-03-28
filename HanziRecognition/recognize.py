@@ -24,7 +24,7 @@ def recognize_Hanzi(model, img, mode='red'):
 
 if __name__ == '__main__':
 
-    save_model_path = "results/Best2CNN100.h5"  # 保存模型路径和名称
+    save_model_path = "./results/Best2CNN100.h5"  # 保存模型路径和名称
     model = load_model(save_model_path)
 
 

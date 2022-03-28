@@ -27,7 +27,7 @@ input_shape = (height, width, 1)
  
 train_data_dir = './data/train'
 validation_data_dir = './data/validation'
-save_model_path = "results/temp.h5"  # 保存模型路径和名称
+save_model_path = "./results/temp.h5"  # 保存模型路径和名称
 
 # 图片生成器ImageDataGenerator
 train_pic_gen = ImageDataGenerator(

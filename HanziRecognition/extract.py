@@ -420,11 +420,10 @@ if __name__ == '__main__':
                     print('Failed')
                 else:
                     print('Success')
-                    # cv2.imshow('First_Hanzi', First_Hanzi)
                     cv2.imwrite(save_file_dir, red_Hanzi)
 
     
-    # # 提取红色棋子
+    # # 提取绿色棋子
     # print('extract green qizi')
     # for i in range(0, 12):
     #     print(qizi[i])
