@@ -176,8 +176,7 @@ def extract_red(img):
 
     reg_plate = None
     if len(contours) > 0:
-        contours = sorted(contours, key=cv2.contourArea,
-                          reverse=True)  # 根据轮廓面积从大到小排序
+        contours = sorted(contours, key=cv2.contourArea,reverse=True)  # 根据轮廓面积从大到小排序
         for c in contours:
 
             peri = cv2.arcLength(c, True)  # 计算轮廓周长
@@ -210,8 +209,7 @@ def extract_red(img):
                     # 调试用
                     for peak in approx:
                         peak = peak[0]  # 顶点坐标
-                        cv2.circle(sourceImage, tuple(peak),
-                                   10, (0, 0, 255), 2)  # 绘制顶点
+                        cv2.circle(sourceImage, tuple(peak), 10, (0, 0, 255), 2)  # 绘制顶点
                     cv2.imshow('ss', sourceImage)
 
                     src = np.float32(
@@ -304,8 +302,7 @@ def extract_green(img):
 
     reg_plate = None
     if len(contours) > 0:
-        contours = sorted(contours, key=cv2.contourArea,
-                          reverse=True)  # 根据轮廓面积从大到小排序
+        contours = sorted(contours, key=cv2.contourArea,reverse=True)  # 根据轮廓面积从大到小排序
         for c in contours:
 
             peri = cv2.arcLength(c, True)  # 计算轮廓周长

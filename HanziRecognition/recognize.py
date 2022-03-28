@@ -4,16 +4,21 @@ import predict
 from tensorflow.keras.models import load_model
 import time
 
-def recognize_Hanzi(model, img):
+def recognize_Hanzi(model, img, mode='red'):
     pre_result = None
-    # qizi_Hanzi = extract.extract_red(img)  # 提取棋子
-    qizi_Hanzi = extract.extract_green(img)  # 提取棋子
+    if mode == 'red':
+        qizi_Hanzi = extract.extract_red(img)  # 提取红色棋子
+    elif mode == 'green':
+        qizi_Hanzi = extract.extract_green(img)  # 提取绿色棋子
+    else:
+        print('Error: mode must be red or green')
+    
     if qizi_Hanzi is None:
         print('提取棋子失败')
     else:
         print('提取棋子成功')
         cv2.imshow('qizi_Hanzi', qizi_Hanzi)
-        pre_result = predict.predict_Hanzi(model, qizi_Hanzi)  # 对图片中的文字进行预测
+        pre_result = predict.predict_Hanzi(model, qizi_Hanzi)  # 对图片中的文字进行预测 如要测试opencv部分性能，请将此句注释
     return pre_result
 
 
@@ -25,7 +30,7 @@ if __name__ == '__main__':
 
 
     # img = cv2.imread('./new_junqi/yinzhang/5.jpg')  # 读取图片
-    # pre_result = recognize_Hanzi(model, img)
+    # pre_result = recognize_Hanzi(model, img, mode = 'green')
     # if pre_result is None:
     #     print('识别棋子失败')
     # else:
@@ -44,13 +49,17 @@ if __name__ == '__main__':
     # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     fpsTime = time.time()
     last_save_time = fpsTime
+    last_result = None
     while cap.isOpened():
         _, frame = cap.read()
         # print(frame.shape)
          
-        pre_result = recognize_Hanzi(model, frame) # 第一次识别
+        pre_result = recognize_Hanzi(model, frame,mode = 'green') # 第一次识别
 
         if pre_result is None:
+            print('识别棋子失败')
+            cv2.putText(frame,'Failed',(10, 100), font, 1,(0, 0, 255), 2, cv2.LINE_AA, 0)
+        elif pre_result != last_result:
             print('识别棋子失败')
             cv2.putText(frame,'Failed',(10, 100), font, 1,(0, 0, 255), 2, cv2.LINE_AA, 0)
         else:
@@ -58,6 +67,8 @@ if __name__ == '__main__':
             cv2.putText(frame,'Success',(10, 100), font, 1,(0, 0, 255), 2, cv2.LINE_AA, 0)
             print('pre_result:', pre_result)
             cv2.putText(frame,'result:'+pre_result, (10, 150), font, 1,(0, 0, 255), 2, cv2.LINE_AA, 0)
+
+        last_result = pre_result
 
         cTime = time.time()
         fps_text = 1/(cTime-fpsTime)

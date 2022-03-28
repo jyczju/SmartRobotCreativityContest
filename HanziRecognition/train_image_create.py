@@ -21,9 +21,9 @@ def ensure_dir(dir_path):
  
 # 图片生成器ImageDataGenerator
 pic_gen = ImageDataGenerator(
-    rotation_range=5,
-    shear_range=0.2,
-    zoom_range=0.2,
+    rotation_range=10,
+    shear_range=0.5,
+    zoom_range=0.5,
     # rotation_range=0,
     # width_shift_range=0,
     # height_shift_range=0,
