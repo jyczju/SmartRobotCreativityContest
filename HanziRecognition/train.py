@@ -78,34 +78,34 @@ model = Sequential([
 
     Flatten(),
 
-    # Dense(64, activation='relu'),
+    # Dense(128, activation='relu'),
 
-    Dense(12, activation='softmax')
+    Dense(32, activation='relu'),
+
+    Dense(12, activation='softmax') # 必须用softmax
 ])
 
 
  
 # sgd = SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 # model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=0.00001), metrics=['accuracy'])
-
+model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=1e-5), metrics=['accuracy'])
 
 model.summary()
 
+lr_reduce = ReduceLROnPlateau(monitor='val_accuracy',factor=0.1, patience=3,verbose=1,mode = 'max', min_lr=1e-11)
 
-lr_reduce = ReduceLROnPlateau(monitor='val_accuracy',factor=0.1, patience=3,verbose=1,mode = 'max', min_lr=0.00000001)
-
-
-early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=8,verbose=1)
+early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=12, verbose=1)
+# early_stop = EarlyStopping(monitor='val_loss',mode ='min', patience=12, verbose=1)
 
 # 保存最佳训练参数
 # checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
 checkpointer = ModelCheckpoint(filepath=save_model_path, monitor='val_accuracy',verbose=2,save_best_only=True,save_weights_only=False,mode='auto')
 
 # 设置训练参数
-nb_train_samples = 50
-nb_validation_samples = 20
-nb_epoch = 100
+nb_train_samples = 32 # 50 # 数据多，可以调大
+nb_validation_samples = 15 # 20 # 数据多，可以调大
+nb_epoch = 50 # 训练轮数
 
 
 # 数据流训练API

@@ -399,33 +399,37 @@ if __name__ == '__main__':
     qizi = ['dilei', 'gongbin', 'junqi', 'junzhang', 'lianzhang', 'lvzhang',
             'paizhang', 'shizhang', 'siling', 'tuanzhang', 'yinzhang', 'zhadan']
 
+
+    # 提取红色棋子
+    print('extract red qizi')
+    for i in range(0, 12):
+        print(qizi[i])
+        save_dir = './extract_img/' + qizi[i] # 保存文件夹
+        img_dir = './origin_img/red/' + qizi[i] # 来源文件夹
+
+        for _, _, files in os.walk(img_dir):
+            # 遍历文件
+            # print(files)
+            for f in files:
+                img_file_dir = img_dir + '/' + f
+                ensure_dir(save_dir)
+                save_file_dir = save_dir + '/ex_red_' + f
+                img = cv2.imread(img_file_dir)  # 读取图片
+                # cv2.imshow('img', img)
+                red_Hanzi = extract_red(img)
+                if red_Hanzi is None:
+                    print('Failed')
+                else:
+                    print('Success')
+                    # cv2.imshow('First_Hanzi', First_Hanzi)
+                    cv2.imwrite(save_file_dir, red_Hanzi)
+
+    
     # # 提取红色棋子
-    # print('extract red qizi')
-    # for i in range(0, 12):
-    #     save_dir = './extract_img/red/' + qizi[i] # 保存文件夹
-    #     img_dir = './origin_img/red/' + qizi[i] # 来源文件夹
-
-    #     for _, _, files in os.walk(img_dir):
-    #         # 遍历文件
-    #         # print(files)
-    #         for f in files:
-    #             img_file_dir = img_dir + '/' + f
-    #             ensure_dir(save_dir)
-    #             save_file_dir = save_dir + '/extract_' + f
-    #             img = cv2.imread(img_file_dir)  # 读取图片
-    #             # cv2.imshow('img', img)
-    #             red_Hanzi = extract_red(img)
-    #             if red_Hanzi is None:
-    #                 print('Failed')
-    #             else:
-    #                 print('Success')
-    #                 # cv2.imshow('First_Hanzi', First_Hanzi)
-    #                 cv2.imwrite(save_file_dir, red_Hanzi)
-
-    # # 提取绿色棋子
     # print('extract green qizi')
     # for i in range(0, 12):
-    #     save_dir = './extract_img/green/' + qizi[i] # 保存文件夹
+    #     print(qizi[i])
+    #     save_dir = './extract_img/' + qizi[i] # 保存文件夹
     #     img_dir = './origin_img/green/' + qizi[i] # 来源文件夹
 
     #     for _, _, files in os.walk(img_dir):
@@ -434,7 +438,7 @@ if __name__ == '__main__':
     #         for f in files:
     #             img_file_dir = img_dir + '/' + f
     #             ensure_dir(save_dir)
-    #             save_file_dir = save_dir + '/extract_' + f
+    #             save_file_dir = save_dir + '/ex_green_' + f
     #             img = cv2.imread(img_file_dir)  # 读取图片
     #             # cv2.imshow('img', img)
     #             green_Hanzi = extract_green(img)
@@ -446,18 +450,19 @@ if __name__ == '__main__':
     #                 cv2.imwrite(save_file_dir, green_Hanzi)
 
 
+
             
-    img = cv2.imread('./origin_img/red/gongbin/4.jpg')  # 读取图片
-    name_of_img = './extract_img/red/gongbin/extract_4.jpg'
-    sourceImage = img.copy()  # 将原图做个备份
+    # img = cv2.imread('./origin_img/red/gongbin/4.jpg')  # 读取图片
+    # name_of_img = './extract_img/gongbin/ex_red_4.jpg'
+    # sourceImage = img.copy()  # 将原图做个备份
 
-    First_Hanzi = extract_red(img)
-    if First_Hanzi is None:
-        print('提取棋子失败')
-    else:
-        print('提取棋子成功')
-        cv2.imshow('First_Hanzi', First_Hanzi)
-        cv2.imwrite(name_of_img, First_Hanzi)
+    # First_Hanzi = extract_red(img)
+    # if First_Hanzi is None:
+    #     print('提取棋子失败')
+    # else:
+    #     print('提取棋子成功')
+    #     cv2.imshow('First_Hanzi', First_Hanzi)
+    #     cv2.imwrite(name_of_img, First_Hanzi)
 
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
