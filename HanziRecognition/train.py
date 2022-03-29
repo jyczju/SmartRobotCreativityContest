@@ -7,7 +7,6 @@ datetime:2018/3/24/024 19:52
 software: PyCharm
 '''
  
-
 from statistics import mode
 from keras.preprocessing.image import ImageDataGenerator
 from matplotlib import pyplot as plt
@@ -18,6 +17,8 @@ from keras.layers import Conv2D, MaxPooling2D
 from keras.layers import Activation, Dropout, Flatten, Dense
 from tensorflow.keras.optimizers import SGD,Adam
 from keras.callbacks import ModelCheckpoint,EarlyStopping,ReduceLROnPlateau
+
+from f1_score import F1_Score
 
 qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan']
  
@@ -96,11 +97,15 @@ model.summary()
 lr_reduce = ReduceLROnPlateau(monitor='val_accuracy',factor=0.1, patience=3,verbose=1,mode = 'max', min_lr=1e-11)
 
 early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=12, verbose=1)
+# early_stop = EarlyStopping(monitor='val_f1',mode ='max', patience=12, verbose=1)
 # early_stop = EarlyStopping(monitor='val_loss',mode ='min', patience=12, verbose=1)
 
 # 保存最佳训练参数
 # checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
 checkpointer = ModelCheckpoint(filepath=save_model_path, monitor='val_accuracy',verbose=2,save_best_only=True,save_weights_only=False,mode='auto')
+
+# f1_score
+f1_score = F1_Score()
 
 # 设置训练参数
 nb_train_samples = 32 # 50 # 数据多，可以调大
@@ -115,18 +120,10 @@ history = model.fit(
     epochs=nb_epoch,
     validation_data=validation_flow,
     validation_steps=nb_validation_samples,
-    callbacks=[lr_reduce,checkpointer,early_stop]
+    callbacks=[lr_reduce,checkpointer,early_stop,f1_score]
+    # callbacks=[lr_reduce,checkpointer,early_stop]
     )
 
-
-# history = model.fit(
-#     train_flow,
-#     steps_per_epoch=nb_train_samples,
-#     epochs=nb_epoch,
-#     validation_data=validation_flow,
-#     validation_steps=nb_validation_samples,
-#     callbacks=[checkpointer,early_stop]
-#     )
 
 # print(history.history)
 
