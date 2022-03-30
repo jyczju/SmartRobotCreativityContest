@@ -1,4 +1,5 @@
 import numpy as np
+import os
 from keras.callbacks import Callback
 from sklearn.metrics import confusion_matrix, f1_score, precision_score, recall_score
 from keras.preprocessing.image import ImageDataGenerator
@@ -9,11 +10,21 @@ class F1_Score(Callback):
         self.val_f1s = []
         self.val_recalls = []
         self.val_precisions = []
+
+        qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan']
+        files_num = 0
+        for i in range(0,12):
+            img_dir = './data/validation/' + qizi[i]
+            for _,_,files in os.walk(img_dir):
+                pass
+            files_num += len(files)
+        print('validation_data has '+str(int(files_num))+' files.')
+
         validation_pic_gen = ImageDataGenerator(rescale=1. / 255)
         validation_flow = validation_pic_gen.flow_from_directory(
             './data/validation',
             target_size=(100, 200),
-            batch_size=32,
+            batch_size=files_num, # 32
             color_mode='grayscale',
             classes=['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan'],
             class_mode='categorical'

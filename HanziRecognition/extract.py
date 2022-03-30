@@ -229,9 +229,11 @@ def extract_red(img):
                         gray_img, m, (length, width))  # 旋转后的图像
 
                     # _, reg_plate = cv2.threshold(reg_plate, THRESHOLD_OF_GRAY, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
+                    
                     reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
-                    # reg_plate = cv2.medianBlur(reg_plate,5)
 
+                    # reg_plate = cv2.medianBlur(reg_plate,5)
+                    
                     reg_plate = reg_plate[int(side):int(width-side), int(side):int(length-side)]  # 裁切掉边框干扰
 
                     # cv2.imshow('reg_plate', reg_plate)
@@ -253,6 +255,9 @@ def extract_red(img):
         qizi_Hanzi = Cut_W(reg_plate_H, W)  # 缩减左右间距
 
         qizi_Hanzi = Revise_HW(qizi_Hanzi, ah=100, aw=200)  # 对图像进行长宽比校正
+
+        # (mean , stddv) = cv2.meanStdDev(qizi_Hanzi)
+        # _, qizi_Hanzi = cv2.threshold(qizi_Hanzi, int(0.75*mean), 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
 
     return qizi_Hanzi
 
@@ -358,6 +363,9 @@ def extract_green(img):
                     reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
                     # reg_plate = cv2.medianBlur(reg_plate,5)
 
+                    # _, reg_plate = cv2.threshold(reg_plate, 255, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
+                    # cv2.imshow('111111',reg_plate)
+
                     reg_plate = reg_plate[int(side):int(
                         width-side), int(side):int(length-side)]  # 裁切掉边框干扰
 
@@ -399,28 +407,28 @@ if __name__ == '__main__':
             'paizhang', 'shizhang', 'siling', 'tuanzhang', 'yinzhang', 'zhadan']
 
 
-    # 提取红色棋子
-    print('extract red qizi')
-    for i in range(0, 12):
-        print(qizi[i])
-        save_dir = './extract_img/' + qizi[i] # 保存文件夹
-        img_dir = './origin_img/red/' + qizi[i] # 来源文件夹
+    # # 提取红色棋子
+    # print('extract red qizi')
+    # for i in range(0, 12):
+    #     print(qizi[i])
+    #     save_dir = './extract_img/' + qizi[i] # 保存文件夹
+    #     img_dir = './origin_img/red/' + qizi[i] # 来源文件夹
 
-        for _, _, files in os.walk(img_dir):
-            # 遍历文件
-            # print(files)
-            for f in files:
-                img_file_dir = img_dir + '/' + f
-                ensure_dir(save_dir)
-                save_file_dir = save_dir + '/ex_red_' + f
-                img = cv2.imread(img_file_dir)  # 读取图片
-                # cv2.imshow('img', img)
-                red_Hanzi = extract_red(img)
-                if red_Hanzi is None:
-                    print('Failed')
-                else:
-                    print('Success')
-                    cv2.imwrite(save_file_dir, red_Hanzi)
+    #     for _, _, files in os.walk(img_dir):
+    #         # 遍历文件
+    #         # print(files)
+    #         for f in files:
+    #             img_file_dir = img_dir + '/' + f
+    #             ensure_dir(save_dir)
+    #             save_file_dir = save_dir + '/ex_red_' + f
+    #             img = cv2.imread(img_file_dir)  # 读取图片
+    #             # cv2.imshow('img', img)
+    #             red_Hanzi = extract_red(img)
+    #             if red_Hanzi is None:
+    #                 print('Failed')
+    #             else:
+    #                 print('Success')
+    #                 cv2.imwrite(save_file_dir, red_Hanzi)
 
     
     # # 提取绿色棋子
@@ -450,17 +458,17 @@ if __name__ == '__main__':
 
 
             
-    # img = cv2.imread('./origin_img/red/gongbin/4.jpg')  # 读取图片
-    # name_of_img = './extract_img/gongbin/ex_red_4.jpg'
-    # sourceImage = img.copy()  # 将原图做个备份
+    img = cv2.imread('./origin_img/red/gongbin/3.jpg')  # 读取图片
+    name_of_img = './extract_img/gongbin/ex_red_3.jpg'
+    sourceImage = img.copy()  # 将原图做个备份
 
-    # First_Hanzi = extract_red(img)
-    # if First_Hanzi is None:
-    #     print('提取棋子失败')
-    # else:
-    #     print('提取棋子成功')
-    #     cv2.imshow('First_Hanzi', First_Hanzi)
-    #     cv2.imwrite(name_of_img, First_Hanzi)
+    First_Hanzi = extract_red(img)
+    if First_Hanzi is None:
+        print('提取棋子失败')
+    else:
+        print('提取棋子成功')
+        cv2.imshow('First_Hanzi', First_Hanzi)
+        cv2.imwrite(name_of_img, First_Hanzi)
 
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()

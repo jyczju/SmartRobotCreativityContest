@@ -105,11 +105,10 @@ early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=12, verb
 # checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
 checkpointer = ModelCheckpoint(filepath=save_model_path, monitor='val_accuracy',verbose=2,save_best_only=True,save_weights_only=False,mode='auto')
 
-
 # 设置训练参数
-nb_train_samples = 32 # int(len(train_flow)/32) # 50 # 数据多，可以调大
-nb_validation_samples = 15 # 20 # 数据多，可以调大
-nb_epoch = 50 # 训练轮数
+nb_train_samples = int(len(train_flow)) # int(len(train_flow)/32) # 50 # 数据多，可以调大
+nb_validation_samples = int(len(validation_flow)) # 20 # 数据多，可以调大
+nb_epoch = 80 # 训练轮数
 
 
 # 数据流训练API
@@ -119,8 +118,8 @@ history = model.fit(
     epochs=nb_epoch,
     validation_data=validation_flow,
     validation_steps=nb_validation_samples,
-    callbacks=[f1_score,lr_reduce,checkpointer,early_stop]
-    # callbacks=[lr_reduce,checkpointer,early_stop]
+    callbacks=[f1_score,checkpointer,lr_reduce,early_stop]
+    # callbacks=[checkpointer,lr_reduce,early_stop]
     )
 
 

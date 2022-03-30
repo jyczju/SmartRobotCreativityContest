@@ -48,6 +48,8 @@ def evaluate(model, test_path):
         right_rate = float(right_num)/len(files)
         files_num += len(files)
         print(qizi[i],':',right_rate)
+    
+    print('test_data has '+str(int(files_num))+' files.')
 
     test_pic_gen = ImageDataGenerator(rescale=1. / 255)
     test_flow = test_pic_gen.flow_from_directory(
