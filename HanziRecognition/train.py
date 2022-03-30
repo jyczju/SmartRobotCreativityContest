@@ -86,7 +86,8 @@ model = Sequential([
     Dense(12, activation='softmax') # 必须用softmax
 ])
 
-
+# f1_score
+f1_score = F1_Score()
  
 # sgd = SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 # model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
@@ -104,11 +105,9 @@ early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=12, verb
 # checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
 checkpointer = ModelCheckpoint(filepath=save_model_path, monitor='val_accuracy',verbose=2,save_best_only=True,save_weights_only=False,mode='auto')
 
-# f1_score
-f1_score = F1_Score()
 
 # 设置训练参数
-nb_train_samples = 32 # 50 # 数据多，可以调大
+nb_train_samples = 32 # int(len(train_flow)/32) # 50 # 数据多，可以调大
 nb_validation_samples = 15 # 20 # 数据多，可以调大
 nb_epoch = 50 # 训练轮数
 
@@ -120,7 +119,7 @@ history = model.fit(
     epochs=nb_epoch,
     validation_data=validation_flow,
     validation_steps=nb_validation_samples,
-    callbacks=[lr_reduce,checkpointer,early_stop,f1_score]
+    callbacks=[f1_score,lr_reduce,checkpointer,early_stop]
     # callbacks=[lr_reduce,checkpointer,early_stop]
     )
 
