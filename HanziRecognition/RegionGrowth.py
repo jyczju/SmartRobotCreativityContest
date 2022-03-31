@@ -49,16 +49,16 @@ def originalSeed(gray):
 
     return centroids
 
-# if __name__ == "__main__":
-img = cv2.imread('test.jpg', cv2.IMREAD_GRAYSCALE)
-seed = originalSeed(img)
-img = regional_growth(img,seed,threshold=50)
+if __name__ == "__main__":
+    img = cv2.imread('test.jpg', cv2.IMREAD_GRAYSCALE)
+    seed = originalSeed(img)
+    img = regional_growth(img,seed,threshold=50)
 
-# 用来正常显示中文标签
-plt.rcParams['font.sans-serif'] = ['SimHei']
-# 图像显示
-plt.figure(figsize=(10, 5))  # width * height
-plt.subplot(111), plt.imshow(img, cmap='gray'), plt.title('区域生长以后'), plt.axis("off")
-plt.show()
-print("ok...")
+    # 用来正常显示中文标签
+    plt.rcParams['font.sans-serif'] = ['SimHei']
+    # 图像显示
+    plt.figure(figsize=(10, 5))  # width * height
+    plt.subplot(111), plt.imshow(img, cmap='gray'), plt.title('区域生长以后'), plt.axis("off")
+    plt.show()
+    print("ok...")
 
