@@ -230,12 +230,13 @@ def extract_red(img):
                     # _, reg_plate = cv2.threshold(reg_plate, THRESHOLD_OF_GRAY, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
                     
                     reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
-
-                    # reg_plate = cv2.medianBlur(reg_plate,5)
                     
                     reg_plate = reg_plate[int(side):int(width-side), int(side):int(length-side)]  # 裁切掉边框干扰
 
-                    # cv2.imshow('reg_plate', reg_plate)
+                    # reg_plate = cv2.adaptiveThreshold(reg_plate, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 71, 4) # 11 4
+                    # reg_plate = cv2.medianBlur(reg_plate,5)
+
+                    cv2.imshow('reg_plate', reg_plate)
 
                     # print(peri)
                     break
@@ -460,8 +461,8 @@ if __name__ == '__main__':
 
 
             
-    img = cv2.imread('./origin_img/red/gongbin/3.jpg')  # 读取图片
-    name_of_img = './extract_img/gongbin/ex_red_3.jpg'
+    img = cv2.imread('./origin_img/red/gongbin/5.jpg')  # 读取图片
+    name_of_img = './extract_img/gongbin/ex_red_5.jpg'
     sourceImage = img.copy()  # 将原图做个备份
 
     First_Hanzi = extract_red(img)
