@@ -1,0 +1,57 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "E:\\Arduino\\hardware\\arduino\\avr\\cores\\arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "E:\\Arduino\\hardware\\arduino\\avr\\variants\\mega"
+  },
+  {
+    "Sourcefile": "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_by_Arduino\\build\\sketch\\mg90s_test.ino.cpp",
+    "Include": "Servo.h",
+    "Includepath": "E:\\Arduino\\libraries\\Servo\\src"
+  },
+  {
+    "Sourcefile": "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_by_Arduino\\build\\sketch\\mg90s_test.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "E:\\Arduino\\libraries\\Servo\\src\\avr\\Servo.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "E:\\Arduino\\libraries\\Servo\\src\\mbed\\Servo.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "E:\\Arduino\\libraries\\Servo\\src\\megaavr\\Servo.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "E:\\Arduino\\libraries\\Servo\\src\\nrf52\\Servo.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "E:\\Arduino\\libraries\\Servo\\src\\sam\\Servo.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "E:\\Arduino\\libraries\\Servo\\src\\samd\\Servo.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "E:\\Arduino\\libraries\\Servo\\src\\stm32f4\\Servo.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]

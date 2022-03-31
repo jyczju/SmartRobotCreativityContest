@@ -225,8 +225,7 @@ def extract_red(img):
                         dst = np.float32([[length, 0], [0, 0], [0, width], [length, width]])  # 期望的四个顶点
 
                     m = cv2.getPerspectiveTransform(src, dst)  # 生成旋转矩阵
-                    reg_plate = cv2.warpPerspective(
-                        gray_img, m, (length, width))  # 旋转后的图像
+                    reg_plate = cv2.warpPerspective(gray_img, m, (length, width))  # 旋转后的图像
 
                     # _, reg_plate = cv2.threshold(reg_plate, THRESHOLD_OF_GRAY, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
                     
@@ -257,7 +256,10 @@ def extract_red(img):
         qizi_Hanzi = Revise_HW(qizi_Hanzi, ah=100, aw=200)  # 对图像进行长宽比校正
 
         # (mean , stddv) = cv2.meanStdDev(qizi_Hanzi)
-        # _, qizi_Hanzi = cv2.threshold(qizi_Hanzi, int(0.75*mean), 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
+        # # _, qizi_Hanzi = cv2.threshold(qizi_Hanzi, int(0.75*mean), 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
+        
+        # qizi_Hanzi = cv2.GaussianBlur(qizi_Hanzi, (5, 5), 0)
+        # _, qizi_Hanzi = cv2.threshold(qizi_Hanzi, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU) # OTSU二值化
 
     return qizi_Hanzi
 
