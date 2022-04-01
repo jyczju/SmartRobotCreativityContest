@@ -1,26 +1,25 @@
-# 1 "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_by_Arduino\\speaker\\speaker.ino"
+#include <Arduino.h>
+#line 1 "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_by_Arduino\\speaker\\speaker.ino"
 /*********************************************************************
-
   文件名：zwvoice.ino
-
   描述：播放中文语音
-
   适用主板：Arduino UNO、NANO、Pro MINI、Leonado、MEGA2560或其他兼容板
-
   适用模块：VoicePro TTS语音合成模块
-
   配合模块：
-
   汉字网址：https://www.107000.com/T-Hex/
-
 *********************************************************************/
-# 10 "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_by_Arduino\\speaker\\speaker.ino"
-# 11 "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_by_Arduino\\speaker\\speaker.ino" 2
+
+#include <SoftwareSerial.h>
 
 SoftwareSerial mySerial(22, 23); //使用软件串口，模块TX接D10，RX接D11
 char Chinese_welcome[50] = {char(0xBB), char(0xB6), char(0xD3), char(0xAD), char(0xCA), char(0xB9), char(0xD3), char(0xC3), char(0xD6), char(0xC7), char(0xC4), char(0xDC), char(0xBE), char(0xFC), char(0xC6), char(0xEC), char(0xD6), char(0xFA), char(0xCA), char(0xD6)}; //欢迎使用智能军旗助手
 void SYN_FrameInfo(uint8_t Music, char *HZdata);
 
+#line 16 "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_by_Arduino\\speaker\\speaker.ino"
+void setup();
+#line 28 "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_by_Arduino\\speaker\\speaker.ino"
+void loop();
+#line 16 "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_by_Arduino\\speaker\\speaker.ino"
 void setup()
 {
     Serial.begin(9600); //设置串口波特率9600
@@ -80,7 +79,7 @@ void loop()
        }
        delay(4000);
     }
-
+    
 }
 
 void SYN_FrameInfo(uint8_t Music, char *HZdata)
@@ -90,18 +89,18 @@ void SYN_FrameInfo(uint8_t Music, char *HZdata)
     unsigned char ecc = 0; //定义校验字节
     unsigned int i = 0;
 
-    HZ_Length = strlen(HZdata); //需要发送文本的长度
-    Frame_Info[0] = 0xFD; //构造帧头FD
-    Frame_Info[1] = 0x00; //构造数据区长度的高字节
-    Frame_Info[2] = HZ_Length + 3; //构造数据区长度的低字节
-    Frame_Info[3] = 0x01; //构造命令字：合成播放命令
+    HZ_Length = strlen(HZdata);        //需要发送文本的长度
+    Frame_Info[0] = 0xFD;              //构造帧头FD
+    Frame_Info[1] = 0x00;              //构造数据区长度的高字节
+    Frame_Info[2] = HZ_Length + 3;     //构造数据区长度的低字节
+    Frame_Info[3] = 0x01;              //构造命令字：合成播放命令
     Frame_Info[4] = 0x00 | Music << 4; //构造命令参数：背景音乐设定
     for (i = 0; i < 5; i++)
-    { //依次发送构造好的5个帧头字节
+    {                                //依次发送构造好的5个帧头字节
         ecc = ecc ^ (Frame_Info[i]); //对发送的字节进行异或校验
     }
     for (i = 0; i < HZ_Length; i++)
-    { //依次发送待合成的文本数据
+    {                            //依次发送待合成的文本数据
         ecc = ecc ^ (HZdata[i]); //对发送的字节进行异或校验
     }
     memcpy(&Frame_Info[5], HZdata, HZ_Length);
@@ -111,3 +110,4 @@ void SYN_FrameInfo(uint8_t Music, char *HZdata)
         mySerial.write(Frame_Info[i]);
     }
 }
+

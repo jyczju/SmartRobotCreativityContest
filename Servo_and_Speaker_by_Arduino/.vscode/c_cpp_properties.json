@@ -17,7 +17,7 @@
             "includePath": [
                 "E:\\Arduino\\hardware\\arduino\\avr\\cores\\arduino",
                 "E:\\Arduino\\hardware\\arduino\\avr\\variants\\mega",
-                "E:\\Arduino\\libraries\\Servo\\src",
+                "E:\\Arduino\\hardware\\arduino\\avr\\libraries\\SoftwareSerial\\src",
                 "e:\\arduino\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include",
                 "e:\\arduino\\hardware\\tools\\avr\\lib\\gcc\\avr\\7.3.0\\include-fixed",
                 "e:\\arduino\\hardware\\tools\\avr\\avr\\include"
