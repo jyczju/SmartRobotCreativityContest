@@ -1,4 +1,5 @@
-//舵机的棕色线接GND，红色线接5V，黄色线为信号线，接PWM 10
+//舵机的棕色线接GND，红色线接5V，黄色线为信号线，接PWM6或10
+//语音模块的黑色线接GND，红色线接5V，黄色线为TX，接22，白色线为RX，接23
 
 #include <Servo.h>
 #include <SoftwareSerial.h>
@@ -23,7 +24,7 @@ char Chinese_rkg[20] = {char(0xC2), char(0xCC), char(0xB7), char(0xBD), char(0xC
 char Chinese_gkr[20] = {char(0xBA), char(0xEC), char(0xB7), char(0xBD), char(0xC6), char(0xE5), char(0xD7), char(0xD3), char(0xD5), char(0xF3), char(0xCD), char(0xF6)};                                                                                                     //红方棋子阵亡
 
 char inputChar = 'Z';
-int DELAY_TIME = 3500;
+int DELAY_TIME = 3000;
 
 void SYN_FrameInfo(uint8_t Music, char *HZdata);
 void Serco_Syn_Write(int angle);
@@ -34,7 +35,7 @@ void setup()
     Serial.println("Serial ON");
 
     servo1.attach(10); // 控制线连接数字10
-    servo2.attach(11); // 控制线连接数字11
+    servo2.attach(6); // 控制线连接数字6
 
     mySerial.begin(9600);
     mySerial.print("<S>2"); //设置语速2，（1-3级可调）
@@ -47,7 +48,7 @@ void setup()
 }
 
 void loop()
-{
+{   
     //串口数据读取
     if (Serial.available())
     {
@@ -78,8 +79,8 @@ void loop()
             Serial.println("equal_siling");
             Serco_Syn_Write(left_angle); //先向左倾斜
             delay(DELAY_TIME);
-            Serco_Syn_Write(left_angle); //再向右倾斜
-            delay(2 * DELAY_TIME);
+            Serco_Syn_Write(right_angle); //再向右倾斜
+            delay(DELAY_TIME);
             Serco_Syn_Write(origin_angle); //回到初始角度
             delay(DELAY_TIME);
         }
@@ -107,8 +108,8 @@ void loop()
             Serial.println("equal");
             Serco_Syn_Write(left_angle); //先向左倾斜
             delay(DELAY_TIME);
-            Serco_Syn_Write(left_angle); //再向右倾斜
-            delay(2 * DELAY_TIME);
+            Serco_Syn_Write(right_angle); //再向右倾斜
+            delay(DELAY_TIME);
             Serco_Syn_Write(origin_angle); //回到初始角度
             delay(DELAY_TIME);
         }
@@ -204,6 +205,6 @@ void SYN_FrameInfo(uint8_t Music, char *HZdata)
 
 void Serco_Syn_Write(int angle)
 {
-    servo1.write(angle)
-        servo2.write(angle)
+    servo1.write(angle);
+    servo2.write(angle);
 }
