@@ -1,0 +1,27 @@
+[
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "E:\\Arduino\\hardware\\arduino\\avr\\cores\\arduino"
+  },
+  {
+    "Sourcefile": null,
+    "Include": "",
+    "Includepath": "E:\\Arduino\\hardware\\arduino\\avr\\variants\\mega"
+  },
+  {
+    "Sourcefile": "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_Driver\\build\\sketch\\speaker.ino.cpp",
+    "Include": "SoftwareSerial.h",
+    "Includepath": "E:\\Arduino\\hardware\\arduino\\avr\\libraries\\SoftwareSerial\\src"
+  },
+  {
+    "Sourcefile": "d:\\浙江大学\\科研竞赛\\SmartRobotCreativityContest\\SmartRobotCreativityContest\\Servo_and_Speaker_Driver\\build\\sketch\\speaker.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "E:\\Arduino\\hardware\\arduino\\avr\\libraries\\SoftwareSerial\\src\\SoftwareSerial.cpp",
+    "Include": "",
+    "Includepath": null
+  }
+]
