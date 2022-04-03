@@ -1,4 +1,4 @@
-//舵机的棕色线接GND，红色线接5V，黄色线为信号线，接PWM6或10
+//舵机的棕色线接GND，红色线接5V，黄色线为信号线，接PWM6或11
 //语音模块的黑色线接GND，红色线接5V，黄色线为TX，接22，白色线为RX，接23
 
 #include <Servo.h>
@@ -34,7 +34,7 @@ void setup()
     Serial.begin(9600); //设置串口波特率9600
     Serial.println("Serial ON");
 
-    servo1.attach(10); // 控制线连接数字10
+    servo1.attach(11); // 控制线连接数字11
     servo2.attach(6); // 控制线连接数字6
 
     mySerial.begin(9600);

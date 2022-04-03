@@ -45,8 +45,8 @@ if __name__ == '__main__':
 
     font = cv2.FONT_HERSHEY_SIMPLEX  # 设置字体样式
     cap = cv2.VideoCapture(0)
-    # cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1080)
-    # cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
     fpsTime = time.time()
     last_save_time = fpsTime
     last_result = None
