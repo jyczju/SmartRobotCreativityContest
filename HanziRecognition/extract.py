@@ -96,17 +96,6 @@ def Cut_W(img, W):
     return img
 
 
-def Revise_HW(img, ah, aw):
-    '''对图像进行长宽比校正'''
-    h = img.shape[0]
-    w = img.shape[1]
-    src = np.float32([[0, 0], [0, h], [w, h], [w, 0]])  # 原图的四个顶点
-    dst = np.float32([[0, 0], [0, ah], [aw, ah], [aw, 0]])  # 期望的四个顶点
-    m = cv2.getPerspectiveTransform(src, dst)  # 生成旋转矩阵
-    img = cv2.warpPerspective(img, m, (aw, ah))  # 旋转后的图像
-    return img
-
-
 def Dilate_Erode(img, size_dilate, size_erode):
     '''膨胀腐蚀处理'''
     # 指定核大小，如果效果不佳，可以试着将核调大
@@ -160,8 +149,7 @@ def extract_red(img):
     # hsv_mask = plate_mask.copy()
     # cv2.imshow('hsv_mask', hsv_mask)
 
-    plate_mask = Dilate_Erode(plate_mask, size_dilate=(
-        5, 5), size_erode=(5, 5))  # 膨胀腐蚀处理
+    plate_mask = Dilate_Erode(plate_mask, size_dilate=(5, 5), size_erode=(5, 5))  # 膨胀腐蚀处理
 
     # 再对图像进行模糊处理
     plate_mask = cv2.medianBlur(plate_mask, 9)
@@ -233,7 +221,7 @@ def extract_red(img):
                     
                     reg_plate = reg_plate[int(side):int(width-side), int(side):int(length-side)]  # 裁切掉边框干扰
 
-                    # reg_plate = cv2.adaptiveThreshold(reg_plate, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 71, 4) # 11 4
+                    # reg_plate = cv2.adaptiveThreshold(reg_plate, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 71, 4) # 11 4 # 动态阈值分割
                     # reg_plate = cv2.medianBlur(reg_plate,5)
 
                     cv2.imshow('reg_plate', reg_plate)
@@ -246,15 +234,15 @@ def extract_red(img):
     else:
         print('检测到棋子')
 
-        # 字符分割
-        H = getHProjection(reg_plate)  # 水平投影
-        reg_plate_H = Cut_H(reg_plate, H)  # 缩减上下间距
-        # cv2.imshow('reg_plate_H',reg_plate_H)
+        # # 字符分割，太慢了！
+        # H = getHProjection(reg_plate)  # 水平投影
+        # reg_plate_H = Cut_H(reg_plate, H)  # 缩减上下间距
+        # # cv2.imshow('reg_plate_H',reg_plate_H)
 
-        W = getVProjection(reg_plate_H)  # 垂直投影
-        qizi_Hanzi = Cut_W(reg_plate_H, W)  # 缩减左右间距
-
-        qizi_Hanzi = Revise_HW(qizi_Hanzi, ah=100, aw=200)  # 对图像进行长宽比校正
+        # W = getVProjection(reg_plate_H)  # 垂直投影
+        # qizi_Hanzi = Cut_W(reg_plate_H, W)  # 缩减左右间距
+        
+        qizi_Hanzi = cv2.resize(reg_plate, (200,100), interpolation=cv2.INTER_AREA) # 对图像进行长宽比校正
 
         # (mean , stddv) = cv2.meanStdDev(qizi_Hanzi)
         # # _, qizi_Hanzi = cv2.threshold(qizi_Hanzi, int(0.75*mean), 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
@@ -382,15 +370,15 @@ def extract_green(img):
     else:
         print('检测到棋子')
 
-        # 字符分割
-        H = getHProjection(reg_plate)  # 水平投影
-        reg_plate_H = Cut_H(reg_plate, H)  # 缩减上下间距
-        # cv2.imshow('reg_plate_H',reg_plate_H)
+        # # 字符分割
+        # H = getHProjection(reg_plate)  # 水平投影
+        # reg_plate_H = Cut_H(reg_plate, H)  # 缩减上下间距
+        # # cv2.imshow('reg_plate_H',reg_plate_H)
 
-        W = getVProjection(reg_plate_H)  # 垂直投影
-        qizi_Hanzi = Cut_W(reg_plate_H, W)  # 缩减左右间距
+        # W = getVProjection(reg_plate_H)  # 垂直投影
+        # qizi_Hanzi = Cut_W(reg_plate_H, W)  # 缩减左右间距
 
-        qizi_Hanzi = Revise_HW(qizi_Hanzi, ah=100, aw=200)  # 对图像进行长宽比校正
+        qizi_Hanzi = cv2.resize(reg_plate, (200,100), interpolation=cv2.INTER_AREA) # 对图像进行长宽比校正
 
     return qizi_Hanzi
 
