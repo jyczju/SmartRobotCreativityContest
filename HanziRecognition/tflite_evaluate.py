@@ -38,7 +38,7 @@ def evaluate(model, test_path):
     print('f1_score:' ,_val_f1)
 
 if __name__ == '__main__':
-    tflite_model_path = "./results/temp.tflite"
+    tflite_model_path = "./results/temp_nocut.tflite"
     test_path = './data/test'
     model = tf.lite.Interpreter(model_path = tflite_model_path) # Load TFLite model
     

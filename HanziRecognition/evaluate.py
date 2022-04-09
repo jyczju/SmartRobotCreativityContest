@@ -80,7 +80,7 @@ def evaluate(model, test_path):
     print('f1_score:' ,_val_f1)
 
 if __name__ == '__main__':
-    save_model_path = "results/temp868Best.h5"  # 保存模型路径和名称
+    save_model_path = "results/temp_nocut.h5"  # 保存模型路径和名称
     test_path = './data/test'
     model = load_model(save_model_path)
     
