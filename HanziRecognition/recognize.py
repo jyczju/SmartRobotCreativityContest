@@ -7,9 +7,9 @@ import time
 def recognize_Hanzi(model, img, mode='red'):
     pre_result = None
     if mode == 'red':
-        qizi_Hanzi = extract.extract_red(img)  # 提取红色棋子
+        qizi_Hanzi,peaks = extract.extract_red(img)  # 提取红色棋子
     elif mode == 'green':
-        qizi_Hanzi = extract.extract_green(img)  # 提取绿色棋子
+        qizi_Hanzi,peaks = extract.extract_green(img)  # 提取绿色棋子
     else:
         print('Error: mode must be red or green')
     
@@ -19,7 +19,7 @@ def recognize_Hanzi(model, img, mode='red'):
         print('提取棋子成功')
         cv2.imshow('qizi_Hanzi', qizi_Hanzi)
         pre_result = predict.predict_Hanzi(model, qizi_Hanzi)  # 对图片中的文字进行预测 如要测试opencv部分性能，请将此句注释
-    return pre_result
+    return pre_result,peaks
 
 
 if __name__ == '__main__':
@@ -54,7 +54,15 @@ if __name__ == '__main__':
         _, frame = cap.read()
         # print(frame.shape)
          
-        pre_result = recognize_Hanzi(model, frame,mode = 'green') # 第一次识别
+        pre_result,peaks = recognize_Hanzi(model, frame,mode = 'green') # 第一次识别
+        if peaks is not None:
+            # for peak in peaks:
+            #     cv2.circle(frame, (int(peak[0]), int(peak[1])), 10, (0, 0, 255), -1) # 绘制顶点
+
+            cv2.line(frame,(int(peaks[0][0]), int(peaks[0][1])),(int(peaks[1][0]), int(peaks[1][1])),(0,0,255),5,cv2.LINE_AA)
+            cv2.line(frame,(int(peaks[1][0]), int(peaks[1][1])),(int(peaks[2][0]), int(peaks[2][1])),(0,0,255),5,cv2.LINE_AA)
+            cv2.line(frame,(int(peaks[2][0]), int(peaks[2][1])),(int(peaks[3][0]), int(peaks[3][1])),(0,0,255),5,cv2.LINE_AA)
+            cv2.line(frame,(int(peaks[3][0]), int(peaks[3][1])),(int(peaks[0][0]), int(peaks[0][1])),(0,0,255),5,cv2.LINE_AA)
 
         if pre_result is None:
             print('识别棋子失败')
@@ -67,6 +75,9 @@ if __name__ == '__main__':
             cv2.putText(frame,'Success',(10, 100), font, 1,(0, 0, 255), 2, cv2.LINE_AA, 0)
             print('pre_result:', pre_result)
             cv2.putText(frame,'result:'+pre_result, (10, 150), font, 1,(0, 0, 255), 2, cv2.LINE_AA, 0)
+            
+
+
 
         last_result = pre_result
 
