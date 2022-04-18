@@ -105,21 +105,16 @@ def Dilate_Erode(img, size_dilate, size_erode):
     # 对图像进行膨胀腐蚀处理
     img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=1)  # 腐蚀
     img = cv2.dilate(img, kernel_dilate, anchor=(-1, -1), iterations=2)  # 膨胀
-    img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=1)  # 腐蚀
-    # plate_mask = cv2.Canny(img, 30, 120, 3)
-    img = cv2.dilate(img, kernel_dilate, anchor=(-1, -1), iterations=2)  # 膨胀
-    img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=2)  # 腐蚀
-    # plate_mask = cv2.dilate(img, kernel_dilate,anchor=(-1, -1), iterations=2)  # 膨胀
-    # plate_mask = cv2.erode(img, kernel_erode,anchor=(-1, -1), iterations=4)  # 腐蚀
-    # plate_mask = cv2.dilate(img, kernel_dilate,anchor=(-1, -1), iterations=5)  # 膨胀
-    # plate_mask = cv2.erode(img, kernel_erode,anchor=(-1, -1), iterations=4)  # 腐蚀
-    # plate_mask = cv2.dilate(img, kernel_dilate,anchor=(-1, -1), iterations=5)  # 膨胀
-    # plate_mask = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=2) # 腐蚀
+    # img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=1)  # 腐蚀
+    # img = cv2.dilate(img, kernel_dilate, anchor=(-1, -1), iterations=2)  # 膨胀
+    # img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=2)  # 腐蚀
+
     return img
 
 
 def extract_red(img):
     '''提取棋子区域'''
+    src = None
     sourceImage = img.copy()
     qizi_Hanzi = None
     img = cv2.GaussianBlur(img, (3, 3), 0)  # 高斯模糊滤波器对图像进行模糊处理
@@ -195,10 +190,10 @@ def extract_red(img):
 
                 if (float(dist01square)/dist03square > 1**2 and float(dist01square)/dist03square < 2.1**2) or (float(dist03square)/dist01square > 1**2 and float(dist03square)/dist01square < 2.1**2):
                     # 调试用
-                    for peak in approx:
-                        peak = peak[0]  # 顶点坐标
-                        cv2.circle(sourceImage, tuple(peak), 10, (0, 0, 255), 2)  # 绘制顶点
-                    cv2.imshow('ss', sourceImage)
+                    # for peak in approx:
+                    #     peak = peak[0]  # 顶点坐标
+                    #     cv2.circle(sourceImage, tuple(peak), 10, (0, 0, 255), 2)  # 绘制顶点
+                    # cv2.imshow('ss', sourceImage)
 
                     src = np.float32(
                         [approx[0][0], approx[1][0], approx[2][0], approx[3][0]])  # 原图的四个顶点
@@ -250,11 +245,12 @@ def extract_red(img):
         # qizi_Hanzi = cv2.GaussianBlur(qizi_Hanzi, (5, 5), 0)
         # _, qizi_Hanzi = cv2.threshold(qizi_Hanzi, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU) # OTSU二值化
 
-    return qizi_Hanzi
+    return qizi_Hanzi,src
 
 
 def extract_green(img):
     '''提取棋子区域'''
+    src =None
     sourceImage = img.copy()
     qizi_Hanzi = None
     img = cv2.GaussianBlur(img, (3, 3), 0)  # 高斯模糊滤波器对图像进行模糊处理
@@ -326,11 +322,10 @@ def extract_green(img):
 
                 if (float(dist01square)/dist03square > 1**2 and float(dist01square)/dist03square < 2.1**2) or (float(dist03square)/dist01square > 1**2 and float(dist03square)/dist01square < 2.1**2):
                     # 调试用
-                    for peak in approx:
-                        peak = peak[0]  # 顶点坐标
-                        cv2.circle(sourceImage, tuple(peak),
-                                   10, (0, 0, 255), 2)  # 绘制顶点
-                    cv2.imshow('ss', sourceImage)
+                    # for peak in approx:
+                    #     peak = peak[0]  # 顶点坐标
+                    #     cv2.circle(sourceImage, tuple(peak), 10, (0, 0, 255), 2)  # 绘制顶点
+                    # cv2.imshow('ss', sourceImage)
 
                     src = np.float32(
                         [approx[0][0], approx[1][0], approx[2][0], approx[3][0]])  # 原图的四个顶点
@@ -380,7 +375,7 @@ def extract_green(img):
 
         qizi_Hanzi = cv2.resize(reg_plate, (200,100), interpolation=cv2.INTER_AREA) # 对图像进行长宽比校正
 
-    return qizi_Hanzi
+    return qizi_Hanzi,src
 
 
 def ensure_dir(dir_path):
