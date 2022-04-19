@@ -28,7 +28,7 @@ input_shape = (height, width, 1)
  
 train_data_dir = './data/train'
 validation_data_dir = './data/validation'
-save_model_path = "./results/temp_nocut.h5"  # 保存模型路径和名称
+save_model_path = "./results/temp.h5"  # 保存模型路径和名称
 
 # 图片生成器ImageDataGenerator
 train_pic_gen = ImageDataGenerator(
@@ -71,6 +71,12 @@ model = Sequential([
     Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
     MaxPooling2D(pool_size=2),
 
+    # Conv2D(filters=32, kernel_size=5, padding='same', activation='relu', input_shape=input_shape),
+    # MaxPooling2D(pool_size=2),
+
+    # Conv2D(filters=64, kernel_size=5, padding='same', activation='relu'),
+    # MaxPooling2D(pool_size=2),
+
     # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
     # MaxPooling2D(pool_size=2),
 
@@ -97,7 +103,7 @@ model.summary()
 
 lr_reduce = ReduceLROnPlateau(monitor='val_accuracy',factor=0.1, patience=3,verbose=1,mode = 'max', min_lr=1e-11)
 
-early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=12, verbose=1)
+early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=9, verbose=1)
 # early_stop = EarlyStopping(monitor='val_f1',mode ='max', patience=12, verbose=1)
 # early_stop = EarlyStopping(monitor='val_loss',mode ='min', patience=12, verbose=1)
 

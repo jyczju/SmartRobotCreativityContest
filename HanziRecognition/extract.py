@@ -409,7 +409,7 @@ if __name__ == '__main__':
                 save_file_dir = save_dir + '/ex_red_' + f
                 img = cv2.imread(img_file_dir)  # 读取图片
                 # cv2.imshow('img', img)
-                red_Hanzi = extract_red(img)
+                red_Hanzi, _ = extract_red(img)
                 if red_Hanzi is None:
                     print('Failed')
                 else:
@@ -433,7 +433,7 @@ if __name__ == '__main__':
     #             save_file_dir = save_dir + '/ex_green_' + f
     #             img = cv2.imread(img_file_dir)  # 读取图片
     #             # cv2.imshow('img', img)
-    #             green_Hanzi = extract_green(img)
+    #             green_Hanzi,_ = extract_green(img)
     #             if green_Hanzi is None:
     #                 print('Failed')
     #             else:
@@ -448,11 +448,12 @@ if __name__ == '__main__':
     # name_of_img = './extract_img/gongbin/ex_red_5.jpg'
     # sourceImage = img.copy()  # 将原图做个备份
 
-    # First_Hanzi = extract_red(img)
+    # First_Hanzi,_ = extract_red(img)
     # if First_Hanzi is None:
     #     print('提取棋子失败')
     # else:
     #     print('提取棋子成功')
+    #     print(First_Hanzi)
     #     cv2.imshow('First_Hanzi', First_Hanzi)
     #     cv2.imwrite(name_of_img, First_Hanzi)
 
