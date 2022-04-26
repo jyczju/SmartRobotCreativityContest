@@ -77,10 +77,14 @@ if __name__ == '__main__':
 
         last_result = pre_result
 
+
+
+
+
         cTime = time.time()
         fps_text = 1/(cTime-fpsTime)
         fpsTime = cTime
-        cv2.putText(frame,str(int(fps_text))+'fps',(10, 50), font, 1,(0, 0, 255), 2, cv2.LINE_AA, 0)
+        cv2.putText(frame,str(round(fps_text,2))+'fps',(10, 50), font, 1,(0, 0, 255), 2, cv2.LINE_AA, 0)
 
         cv2.imshow('frame',frame)
 
