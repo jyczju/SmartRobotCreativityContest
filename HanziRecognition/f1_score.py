@@ -23,7 +23,7 @@ class F1_Score(Callback):
         validation_pic_gen = ImageDataGenerator(rescale=1. / 255)
         validation_flow = validation_pic_gen.flow_from_directory(
             './data/validation',
-            target_size=(100, 200),
+            target_size=(100, 150),
             batch_size=files_num, # 32
             color_mode='grayscale',
             classes=['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan'],

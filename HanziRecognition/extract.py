@@ -237,7 +237,7 @@ def extract_red(img):
         # W = getVProjection(reg_plate_H)  # 垂直投影
         # qizi_Hanzi = Cut_W(reg_plate_H, W)  # 缩减左右间距
         
-        qizi_Hanzi = cv2.resize(reg_plate, (200,100), interpolation=cv2.INTER_AREA) # 对图像进行长宽比校正
+        qizi_Hanzi = cv2.resize(reg_plate, (150,100), interpolation=cv2.INTER_AREA) # 对图像进行长宽比校正
 
         # (mean , stddv) = cv2.meanStdDev(qizi_Hanzi)
         # # _, qizi_Hanzi = cv2.threshold(qizi_Hanzi, int(0.75*mean), 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
@@ -373,7 +373,7 @@ def extract_green(img):
         # W = getVProjection(reg_plate_H)  # 垂直投影
         # qizi_Hanzi = Cut_W(reg_plate_H, W)  # 缩减左右间距
 
-        qizi_Hanzi = cv2.resize(reg_plate, (200,100), interpolation=cv2.INTER_AREA) # 对图像进行长宽比校正
+        qizi_Hanzi = cv2.resize(reg_plate, (150,100), interpolation=cv2.INTER_AREA) # 对图像进行长宽比校正
 
     return qizi_Hanzi,src
 

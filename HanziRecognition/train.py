@@ -6,7 +6,8 @@ author:Administrator
 datetime:2018/3/24/024 19:52
 software: PyCharm
 '''
- 
+from keras.utils.vis_utils import plot_model 
+
 from statistics import mode
 from keras.preprocessing.image import ImageDataGenerator
 from matplotlib import pyplot as plt
@@ -23,7 +24,7 @@ from f1_score import F1_Score
 qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan']
  
 # 图片尺寸
-height, width = 100, 200
+height, width = 100, 150
 input_shape = (height, width, 1)
  
 train_data_dir = './data/train'
@@ -100,6 +101,8 @@ f1_score = F1_Score()
 model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=1e-5), metrics=['accuracy'])
 
 model.summary()
+
+plot_model(model, to_file='model-CNN.png', show_shapes=True)
 
 lr_reduce = ReduceLROnPlateau(monitor='val_accuracy',factor=0.1, patience=3,verbose=1,mode = 'max', min_lr=1e-11)
 
