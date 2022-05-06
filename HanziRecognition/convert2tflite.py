@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras.models import load_model
 
-h5_model_path =  "./results/temp.h5"
+h5_model_path =  "./results/20220506-9241.h5"
 tflite_model_path = h5_model_path[:-2] + "tflite"
 # print(tflite_model_path)
 
