@@ -40,7 +40,7 @@ train_pic_gen = ImageDataGenerator(
     )
  
 # 测试集不做变形处理，只需归一化。
-validation_pic_gen = ImageDataGenerator(rescale=1. / 255)
+validation_pic_gen = ImageDataGenerator(rescale=1./ 255)
  
 # 按文件夹生成训练集流和标签，
 train_flow = train_pic_gen.flow_from_directory(
@@ -66,10 +66,10 @@ validation_flow = validation_pic_gen.flow_from_directory(
 )
 
 model = Sequential([
-    Conv2D(filters=32, kernel_size=3, padding='same', activation='relu', input_shape=input_shape),
+    Conv2D(filters=64, kernel_size=9, padding='same', activation='relu', input_shape=input_shape),
     MaxPooling2D(pool_size=2),
 
-    Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
+    Conv2D(filters=32, kernel_size=9, padding='same', activation='relu'),
     MaxPooling2D(pool_size=2),
 
     # Conv2D(filters=32, kernel_size=5, padding='same', activation='relu', input_shape=input_shape),
@@ -81,10 +81,12 @@ model = Sequential([
     # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
     # MaxPooling2D(pool_size=2),
 
-    # Conv2D(filters=32, kernel_size=3, padding='same', activation='relu'),
-    # MaxPooling2D(pool_size=2),
+    Conv2D(filters=16, kernel_size=5, padding='same', activation='relu'),
+    MaxPooling2D(pool_size=2),
 
     Flatten(),
+
+    Dense(256, activation='relu'),
 
     # Dense(128, activation='relu'),
 
@@ -98,7 +100,7 @@ f1_score = F1_Score()
  
 # sgd = SGD(learning_rate=0.01, decay=1e-6, momentum=0.9, nesterov=True)
 # model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=1e-5), metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer=Adam(learning_rate=1e-5), metrics=['accuracy']) # lr = 1e-5
 
 model.summary()
 
@@ -108,15 +110,17 @@ lr_reduce = ReduceLROnPlateau(monitor='val_accuracy',factor=0.1, patience=3,verb
 
 early_stop = EarlyStopping(monitor='val_accuracy',mode ='max', patience=9, verbose=1)
 # early_stop = EarlyStopping(monitor='val_f1',mode ='max', patience=12, verbose=1)
-# early_stop = EarlyStopping(monitor='val_loss',mode ='min', patience=12, verbose=1)
+# early_stop = EarlyStopping(monitor='val_loss',mode ='min', patience=9, verbose=1)
 
 # 保存最佳训练参数
 # checkpointer = ModelCheckpoint(filepath="./tmp/weights.hdf5", verbose=1, save_best_only=True)
 checkpointer = ModelCheckpoint(filepath=save_model_path, monitor='val_accuracy',verbose=2,save_best_only=True,save_weights_only=False,mode='auto')
 
 # 设置训练参数
-nb_train_samples = int(len(train_flow)) # int(len(train_flow)/32) # 50 # 数据多，可以调大
-nb_validation_samples = int(len(validation_flow)) # 20 # 数据多，可以调大
+print('length of train_flow:', len(train_flow))
+print('length of validation_flow:', len(validation_flow))
+nb_train_samples = int(len(train_flow)/4) # int(len(train_flow)/32) # 50 # 数据多，可以调大
+nb_validation_samples = int(len(validation_flow)/4) # 20 # 数据多，可以调大
 nb_epoch = 80 # 训练轮数
 
 
@@ -127,8 +131,8 @@ history = model.fit(
     epochs=nb_epoch,
     validation_data=validation_flow,
     validation_steps=nb_validation_samples,
-    callbacks=[f1_score,checkpointer,lr_reduce,early_stop]
-    # callbacks=[checkpointer,lr_reduce,early_stop]
+    # callbacks=[f1_score,checkpointer,lr_reduce,early_stop]
+    callbacks=[checkpointer,lr_reduce,early_stop]
     )
 
 
@@ -146,8 +150,9 @@ plt.plot(history.history['accuracy'], label='train_accuracy')
 plt.plot(history.history['val_accuracy'], label='val_accuracy')
 plt.title('accuracy')
 plt.legend()
-plt.show()
 
+plt.savefig('history.png')
+plt.show()
 
 # model = load_model(save_model_path)
 

@@ -19,6 +19,8 @@ def evaluate(model, test_path):
         for _,_,files in os.walk(img_dir):
             # 遍历文件
             for f in files:
+                # print('evaluating by ',f)
+
                 img_file_dir = img_dir + '/' + f
                 img = cv2.imread(img_file_dir, cv2.IMREAD_GRAYSCALE)  # 读取图片
 
@@ -38,7 +40,7 @@ def evaluate(model, test_path):
     print('f1_score:' ,_val_f1)
 
 if __name__ == '__main__':
-    tflite_model_path = "./results/temp_nocut.tflite"
+    tflite_model_path = "./results/temp.tflite"
     test_path = './data/test'
     model = tf.lite.Interpreter(model_path = tflite_model_path) # Load TFLite model
     

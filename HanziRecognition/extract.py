@@ -200,7 +200,7 @@ def extract_red(img):
 
                     width = 255
                     length = 455
-                    side = 5
+                    side = 10
 
                     if dist01square < dist03square:
                         dst = np.float32([[0, 0], [0, width], [length, width], [length, 0]])  # 期望的四个顶点
@@ -210,15 +210,11 @@ def extract_red(img):
                     m = cv2.getPerspectiveTransform(src, dst)  # 生成旋转矩阵
                     reg_plate = cv2.warpPerspective(gray_img, m, (length, width))  # 旋转后的图像
 
-                    # _, reg_plate = cv2.threshold(reg_plate, THRESHOLD_OF_GRAY, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
-                    
-                    reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
-                    
                     reg_plate = reg_plate[int(side):int(width-side), int(side):int(length-side)]  # 裁切掉边框干扰
 
-                    # reg_plate = cv2.adaptiveThreshold(reg_plate, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 71, 4) # 11 4 # 动态阈值分割
-                    # reg_plate = cv2.medianBlur(reg_plate,5)
-
+                    reg_plate = cv2.normalize(reg_plate,None,0,255,cv2.NORM_MINMAX)             
+                    reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
+                    
                     cv2.imshow('reg_plate', reg_plate)
 
                     # print(peri)
@@ -239,11 +235,16 @@ def extract_red(img):
         
         qizi_Hanzi = cv2.resize(reg_plate, (150,100), interpolation=cv2.INTER_AREA) # 对图像进行长宽比校正
 
-        # (mean , stddv) = cv2.meanStdDev(qizi_Hanzi)
-        # # _, qizi_Hanzi = cv2.threshold(qizi_Hanzi, int(0.75*mean), 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
-        
-        # qizi_Hanzi = cv2.GaussianBlur(qizi_Hanzi, (5, 5), 0)
+
         # _, qizi_Hanzi = cv2.threshold(qizi_Hanzi, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU) # OTSU二值化
+
+        # th, _ = cv2.threshold(qizi_Hanzi[:,0:75], 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU) # OTSU二值化
+        # _,qizi_Hanzi_left = cv2.threshold(qizi_Hanzi[:,0:75], int(th*0.85), 255, cv2.THRESH_BINARY)# OTSU二值化
+
+        # th, _ = cv2.threshold(qizi_Hanzi[:,75:-1], 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU) # OTSU二值化
+        # _,qizi_Hanzi_right = cv2.threshold(qizi_Hanzi[:,75:-1], int(th*0.85), 255, cv2.THRESH_BINARY)# OTSU二值化
+        # qizi_Hanzi = np.hstack([qizi_Hanzi_left,qizi_Hanzi_right])
+
 
     return qizi_Hanzi,src
 
@@ -332,7 +333,7 @@ def extract_green(img):
 
                     width = 255
                     length = 455
-                    side = 5
+                    side = 10
 
                     if dist01square < dist03square:
                         dst = np.float32(
@@ -342,20 +343,14 @@ def extract_green(img):
                                          length, width]])  # 期望的四个顶点
 
                     m = cv2.getPerspectiveTransform(src, dst)  # 生成旋转矩阵
-                    reg_plate = cv2.warpPerspective(
-                        gray_img, m, (length, width))  # 旋转后的图像
+                    reg_plate = cv2.warpPerspective(gray_img, m, (length, width))  # 旋转后的图像
 
-                    # _, reg_plate = cv2.threshold(reg_plate, THRESHOLD_OF_GRAY, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
+                    reg_plate = reg_plate[int(side):int(width-side), int(side):int(length-side)]  # 裁切掉边框干扰
+
+                    reg_plate = cv2.normalize(reg_plate,None,0,255,cv2.NORM_MINMAX)             
                     reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
-                    # reg_plate = cv2.medianBlur(reg_plate,5)
 
-                    # _, reg_plate = cv2.threshold(reg_plate, 255, 255, cv2.THRESH_BINARY)  # 对图像进行二值化操作
-                    # cv2.imshow('111111',reg_plate)
-
-                    reg_plate = reg_plate[int(side):int(
-                        width-side), int(side):int(length-side)]  # 裁切掉边框干扰
-
-                    # cv2.imshow('reg_plate', reg_plate)
+                    cv2.imshow('reg_plate', reg_plate)
 
                     # print(peri)
                     break
@@ -374,6 +369,14 @@ def extract_green(img):
         # qizi_Hanzi = Cut_W(reg_plate_H, W)  # 缩减左右间距
 
         qizi_Hanzi = cv2.resize(reg_plate, (150,100), interpolation=cv2.INTER_AREA) # 对图像进行长宽比校正
+
+        # th, _ = cv2.threshold(qizi_Hanzi[:,0:75], 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU) # OTSU二值化
+        # _,qizi_Hanzi_left = cv2.threshold(qizi_Hanzi[:,0:75], int(th-10), 255, cv2.THRESH_BINARY)# OTSU二值化
+
+        # th, _ = cv2.threshold(qizi_Hanzi[:,75:-1], 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU) # OTSU二值化
+        # _,qizi_Hanzi_right = cv2.threshold(qizi_Hanzi[:,75:-1], int(th - 10), 255, cv2.THRESH_BINARY)# OTSU二值化
+        # qizi_Hanzi = np.hstack([qizi_Hanzi_left,qizi_Hanzi_right])
+
 
     return qizi_Hanzi,src
 
@@ -417,45 +420,60 @@ if __name__ == '__main__':
                     cv2.imwrite(save_file_dir, red_Hanzi)
 
     
-    # # 提取绿色棋子
-    # print('extract green qizi')
-    # for i in range(0, 12):
-    #     print(qizi[i])
-    #     save_dir = './extract_img/' + qizi[i] # 保存文件夹
-    #     img_dir = './origin_img/green/' + qizi[i] # 来源文件夹
+    # 提取绿色棋子
+    print('extract green qizi')
+    for i in range(0, 12):
+        print(qizi[i])
+        save_dir = './extract_img/' + qizi[i] # 保存文件夹
+        img_dir = './origin_img/green/' + qizi[i] # 来源文件夹
 
-    #     for _, _, files in os.walk(img_dir):
-    #         # 遍历文件
-    #         # print(files)
-    #         for f in files:
-    #             img_file_dir = img_dir + '/' + f
-    #             ensure_dir(save_dir)
-    #             save_file_dir = save_dir + '/ex_green_' + f
-    #             img = cv2.imread(img_file_dir)  # 读取图片
-    #             # cv2.imshow('img', img)
-    #             green_Hanzi,_ = extract_green(img)
-    #             if green_Hanzi is None:
-    #                 print('Failed')
-    #             else:
-    #                 print('Success')
-    #                 # cv2.imshow('First_Hanzi', First_Hanzi)
-    #                 cv2.imwrite(save_file_dir, green_Hanzi)
+        for _, _, files in os.walk(img_dir):
+            # 遍历文件
+            # print(files)
+            for f in files:
+                img_file_dir = img_dir + '/' + f
+                ensure_dir(save_dir)
+                save_file_dir = save_dir + '/ex_green_' + f
+                img = cv2.imread(img_file_dir)  # 读取图片
+                # cv2.imshow('img', img)
+                green_Hanzi,_ = extract_green(img)
+                if green_Hanzi is None:
+                    print('Failed')
+                else:
+                    print('Success')
+                    # cv2.imshow('First_Hanzi', First_Hanzi)
+                    cv2.imwrite(save_file_dir, green_Hanzi)
 
 
 
             
-    # img = cv2.imread('./origin_img/red/gongbin/5.jpg')  # 读取图片
-    # name_of_img = './extract_img/gongbin/ex_red_5.jpg'
+    # img = cv2.imread('./origin_img/red/tuanzhang/0.jpg')  # 读取图片
+    # name_of_img = './extract_img/tuanzhang/ex_red_0.jpg'
     # sourceImage = img.copy()  # 将原图做个备份
+    # cv2.imshow('img', img)
 
     # First_Hanzi,_ = extract_red(img)
     # if First_Hanzi is None:
     #     print('提取棋子失败')
     # else:
     #     print('提取棋子成功')
-    #     print(First_Hanzi)
+    #     # print(First_Hanzi)
     #     cv2.imshow('First_Hanzi', First_Hanzi)
-    #     cv2.imwrite(name_of_img, First_Hanzi)
+    #     # cv2.imwrite(name_of_img, First_Hanzi)
 
-    # cv2.waitKey(0)
-    # cv2.destroyAllWindows()
+    # img = cv2.imread('./origin_img/green/dilei/2.jpg')  # 读取图片
+    # name_of_img = './extract_img/dilei/ex_green_2.jpg'
+    # sourceImage = img.copy()  # 将原图做个备份
+    # cv2.imshow('img', img)
+
+    # First_Hanzi,_ = extract_green(img)
+    # if First_Hanzi is None:
+    #     print('提取棋子失败')
+    # else:
+    #     print('提取棋子成功')
+    #     # print(First_Hanzi)
+    #     cv2.imshow('First_Hanzi', First_Hanzi)
+    #     # cv2.imwrite(name_of_img, First_Hanzi)
+
+    cv2.waitKey(0)
+    cv2.destroyAllWindows()
