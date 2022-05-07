@@ -12,7 +12,8 @@ def evaluate(model, test_path):
     test_predict = []
     test_targ = []
     qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan']
-    # files_num = 0
+    files_num = 0
+    right_nums = 0
     for i in range(0,12):
         img_dir = test_path + '/' + qizi[i]
         right_num = 0
@@ -33,11 +34,14 @@ def evaluate(model, test_path):
                     right_num += 1
 
         right_rate = float(right_num)/len(files)
-        # files_num += len(files)
+        files_num += len(files)
+        right_nums += right_num
         print(qizi[i],':',right_rate)
 
     _val_f1 = f1_score(test_targ, test_predict, average='micro') # average='macro'
     print('f1_score:' ,_val_f1)
+    acc = float(right_nums)/files_num
+    print('accuracy:', acc)
 
 if __name__ == '__main__':
     tflite_model_path = "./results/temp.tflite"

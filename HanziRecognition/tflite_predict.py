@@ -1,6 +1,10 @@
 import numpy as np
-import tensorflow as tf
 import cv2
+import platform
+if platform.system() == 'Windows':
+    import tensorflow as tf
+elif platform.system() == 'Linux':
+    import tflite_runtime.interpreter as tflite
 
 def tflite_predict(model, img):
     qizi = ['dilei', 'gongbin', 'junqi', 'junzhang', 'lianzhang', 'lvzhang',
@@ -26,9 +30,13 @@ def tflite_predict(model, img):
 
 if __name__ == '__main__':
     tflite_model_path = "./results/temp.tflite"
-    img_path = "./data/test/junqi/junqi_0_127.jpg"
+    img_path = "./extract_img/junqi/ex_green_0.jpg"
     
-    model = tf.lite.Interpreter(model_path = tflite_model_path) # Load TFLite model
+    if platform.system() == 'Windows':
+        model = tf.lite.Interpreter(model_path = tflite_model_path) # Load TFLite model
+    elif platform.system() == 'Linux':
+        model = tflite.Interpreter(model_path = tflite_model_path)
+    
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
 
     pre_result = tflite_predict(model, img)

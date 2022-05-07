@@ -38,4 +38,4 @@ def set_split(old_path, new_path, train_rate = 0.6, val_rate = 0.2):
 if __name__ == '__main__':
     old_path = './extract_img'
     new_path = './data_img'
-    set_split(old_path, new_path, train_rate = 0.6, val_rate = 0.3 )
+    set_split(old_path, new_path, train_rate = 0.72, val_rate = 0.22 )
