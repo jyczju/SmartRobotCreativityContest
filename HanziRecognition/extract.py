@@ -104,9 +104,9 @@ def Dilate_Erode(img, size_dilate, size_erode):
 
     # 对图像进行膨胀腐蚀处理
     img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=1)  # 腐蚀
-    img = cv2.dilate(img, kernel_dilate, anchor=(-1, -1), iterations=2)  # 膨胀
-    # img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=1)  # 腐蚀
     # img = cv2.dilate(img, kernel_dilate, anchor=(-1, -1), iterations=2)  # 膨胀
+    # img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=1)  # 腐蚀
+    img = cv2.dilate(img, kernel_dilate, anchor=(-1, -1), iterations=3)  # 膨胀
     # img = cv2.erode(img, kernel_erode, anchor=(-1, -1), iterations=2)  # 腐蚀
 
     return img
@@ -148,7 +148,7 @@ def extract_red(img):
 
     # 再对图像进行模糊处理
     plate_mask = cv2.medianBlur(plate_mask, 9)
-    cv2.imshow('dilate', plate_mask)
+    cv2.imshow('dilate_red', plate_mask)
 
     # 图像扶正
     # edge = cv2.Canny(plate_mask, 30, 120, 3)  # 边缘检测
@@ -281,7 +281,7 @@ def extract_green(img):
 
     # 再对图像进行模糊处理
     plate_mask = cv2.medianBlur(plate_mask, 9)
-    cv2.imshow('dilate', plate_mask)
+    cv2.imshow('dilate_green', plate_mask)
 
     # 图像扶正
     # edge = cv2.Canny(plate_mask, 30, 120, 3)  # 边缘检测

@@ -126,6 +126,8 @@ if __name__ == '__main__':
     #     fpsTime = cTime
     #     cv2.putText(frame,str(round(fps_text,2))+'fps',(10, 50), font, 1,(255, 0, 0), 2, cv2.LINE_AA, 0)
 
+    #     cv2.putText(frame,compare_result,(800, 50), font, 1,(255, 0, 0), 2, cv2.LINE_AA, 0)
+
     #     cv2.imshow('frame',frame)
 
     #     if cv2.waitKey(5) & 0xFF == 27:
