@@ -13,7 +13,7 @@ import tensorflow_model_optimization as tfmot
 from tensorflow.keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
  
-## 0. 参数设置 ##############################################################################################
+# 参数设置 ##############################################################################################
 
 IMG_SIZE = (100, 150)
 BATCH_SIZE = 32
@@ -57,7 +57,6 @@ test_dataset = test_pic_gen.flow_from_directory(
     classes=qizi,
     class_mode='categorical'
 )
- 
  
 # 量化感知训练
  

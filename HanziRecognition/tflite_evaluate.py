@@ -44,7 +44,7 @@ def evaluate(model, test_path):
     print('accuracy:', acc)
 
 if __name__ == '__main__':
-    tflite_model_path = "./results/temp_int8.tflite"
+    tflite_model_path = "./results/temp.tflite"
     test_path = './data/test'
     model = tf.lite.Interpreter(model_path = tflite_model_path) # Load TFLite model
     
