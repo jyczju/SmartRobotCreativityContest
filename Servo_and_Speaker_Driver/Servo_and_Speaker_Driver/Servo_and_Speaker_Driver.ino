@@ -53,7 +53,7 @@ void loop()
     if (Serial.available())
     {
         inputChar = Serial.read(); // char(Serial.read())
-        Serial.println(inputChar);
+        //Serial.println(inputChar);
         //收集红方棋子向左倾斜，收集绿方棋子向右倾斜
         if (inputChar == 'A')
         {

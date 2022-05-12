@@ -4,10 +4,26 @@ import compare
 import tflite_predict
 import platform
 import time
+import serial
 if platform.system() == 'Windows':
     import tensorflow as tf
 elif platform.system() == 'Linux':
     import tflite_runtime.interpreter as tflite
+
+compareDict = {
+    'green_win': 'A',
+    'red_win': 'B',
+    'equal_siling': 'C',
+    'red_siling_killed_by_zhadan': 'D',
+    'green_siling_killed_by_zhadan': 'E',
+    'equal': 'F',
+    'red_siling_killed_by_dilei': 'G',
+    'green_siling_killed_by_dilei': 'H',
+    'red_kill_green': 'I',
+    'green_kill_red': 'J',
+    'red_kill_green': 'K',
+    'green_kill_red': 'L'
+}
 
 
 def recognize_Hanzi(model, img, mode='red'):
@@ -29,6 +45,29 @@ def recognize_Hanzi(model, img, mode='red'):
 
 
 if __name__ == '__main__':
+    if platform.system() == 'Windows':
+        port = 'COM10'
+    if platform.system() == 'Linux':
+        port = '/dev/ttyUSB0' # 接树莓派左上USB口
+    serialport = serial.Serial(port, 9600, timeout=0.5)
+    if serialport.isOpen():
+        print("open USART success")
+    else:
+        print("open USART failed")
+
+    # 调试用
+    # while bytes(serialport.readline()).decode('ascii') != 'Serial ON\r\n':
+    #     print('wait...')
+    # print('Serial ON')
+
+    # time.sleep(5)
+    # if serialport.isOpen():
+    #     sendchar = 'A'
+    #     # serialport.write(b'A\r\n')
+    #     serialport.write(sendchar.encode('ascii'))
+    #     receive_data = bytes(serialport.readline()).decode('ascii')
+    #     if receive_data != '':
+    #         print(receive_data[:-2])
 
     tflite_model_path = "./results/temp.tflite"  # 保存模型路径和名称
     if platform.system() == 'Windows':
@@ -122,6 +161,14 @@ if __name__ == '__main__':
             compare_result = compare.compare(red_result, green_result)
             print(compare_result)
             cv2.putText(frame,compare_result,(800, 50), font, 1,(255, 0, 0), 2, cv2.LINE_AA, 0)
+            # 将比较结果通过串口发送给Arduino
+            if serialport.isOpen():
+                sendchar = compareDict[compare_result]
+                serialport.write(sendchar.encode('ascii'))
+                receive_data = bytes(serialport.readline()).decode('ascii')
+                if receive_data != '':
+                    print(receive_data[:-2])
+
 
         cTime = time.time()
         fps_text = 1/(cTime-fpsTime)
