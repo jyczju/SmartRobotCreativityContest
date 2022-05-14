@@ -130,12 +130,14 @@ def extract_red(img):
 
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # 转换为HSV空间
 
-    # lower_blue = np.array([100, 30, 70])  # 设定蓝色的阈值下限
-    # upper_blue = np.array([250, 235, 255])  # 设定蓝色的阈值上限
-    lower_red1 = np.array([0, 50, 50])  # 设定红色的阈值下限
-    upper_red1 = np.array([5, 250, 255])  # 设定红色的阈值上限
-    lower_red2 = np.array([175, 50, 50])  # 设定红色的阈值下限
-    upper_red2 = np.array([180, 250, 255])  # 设定红色的阈值上限
+    # lower_red1 = np.array([0, 50, 50])  # 设定红色的阈值下限
+    # upper_red1 = np.array([15, 255, 255])  # 设定红色的阈值上限
+    # lower_red2 = np.array([155, 50, 50])  # 设定红色的阈值下限
+    # upper_red2 = np.array([180, 255, 255])  # 设定红色的阈值上限
+    lower_red1 = np.array([0, 50, 0])  # 设定红色的阈值下限
+    upper_red1 = np.array([10, 255, 255])  # 设定红色的阈值上限
+    lower_red2 = np.array([165, 50, 0])  # 设定红色的阈值下限
+    upper_red2 = np.array([180, 255, 255])  # 设定红色的阈值上限
 
     # 消除噪声
     # plate_mask = cv2.inRange(hsv_img, lower_blue, upper_blue)  # 设定掩膜取值范围
@@ -215,7 +217,7 @@ def extract_red(img):
                     reg_plate = cv2.normalize(reg_plate,None,0,255,cv2.NORM_MINMAX)             
                     reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
                     
-                    cv2.imshow('reg_plate', reg_plate)
+                    # cv2.imshow('reg_plate', reg_plate)
 
                     # print(peri)
                     break
@@ -350,7 +352,7 @@ def extract_green(img):
                     reg_plate = cv2.normalize(reg_plate,None,0,255,cv2.NORM_MINMAX)             
                     reg_plate = cv2.equalizeHist(reg_plate)  # 直方图均衡化
 
-                    cv2.imshow('reg_plate', reg_plate)
+                    # cv2.imshow('reg_plate', reg_plate)
 
                     # print(peri)
                     break

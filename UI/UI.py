@@ -1,6 +1,5 @@
 import cv2
 
-
 red_remaining = 25
 green_remaining = 25
 img = cv2.imread('c:/Users/86157/Desktop/University/Miscellaneous/SRCC/normal.jpg')

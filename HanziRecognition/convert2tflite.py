@@ -10,7 +10,7 @@ converter = tf.lite.TFLiteConverter.from_keras_model(h5_model)
 
 converter.optimizations = [tf.lite.Optimize.DEFAULT] # 开启动态量化
 # converter.target_spec.supported_types = [tf.float32] # 开启支持32位浮点数
-converter.target_spec.supported_types = [tf.float16] # 开启支持16位浮点数
+# converter.target_spec.supported_types = [tf.float16] # 开启支持16位浮点数
 
 
 tflite_model = converter.convert()

@@ -40,7 +40,7 @@ validation_pic_gen = ImageDataGenerator(rescale=1./ 255)
 train_flow = train_pic_gen.flow_from_directory(
     train_data_dir,
     target_size=(height, width),
-    batch_size=32,
+    batch_size= 32,
     color_mode='grayscale',
     # color_mode='rgb',
     classes=qizi,
@@ -51,7 +51,7 @@ train_flow = train_pic_gen.flow_from_directory(
 validation_flow = validation_pic_gen.flow_from_directory(
     validation_data_dir,
     target_size=(height, width),
-    batch_size=32,
+    batch_size= 32,
     color_mode='grayscale',
     # color_mode='rgb',
     classes=qizi,
@@ -109,11 +109,11 @@ model = Sequential([
 
     Flatten(),
 
-    Dense(4096, activation='relu'),
+    Dense(128, activation='relu'),
     # BatchNormalization(),
     Dropout(0.4),
 
-    Dense(1000, activation='relu'),
+    # Dense(1000, activation='relu'),
     # BatchNormalization(),
     # Dropout(0.4),
 
@@ -126,8 +126,8 @@ f1_score = F1_Score()
 # 设置训练参数
 print('length of train_flow:', len(train_flow))
 print('length of validation_flow:', len(validation_flow))
-nb_train_samples = int(len(train_flow)/9) # int(len(train_flow)/32) # 50 # 数据多，可以调大
-nb_validation_samples = int(len(validation_flow)/9) # 20 # 数据多，可以调大
+nb_train_samples = int(len(train_flow)/8) # int(len(train_flow)/32) # 50 # 数据多，可以调大
+nb_validation_samples = int(len(validation_flow)/8) # 20 # 数据多，可以调大
 nb_epoch = 80 # 训练轮数
 
 

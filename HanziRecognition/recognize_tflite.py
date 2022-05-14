@@ -5,6 +5,7 @@ import tflite_predict
 import platform
 import time
 import serial
+from UI import show_UI
 if platform.system() == 'Windows':
     import tensorflow as tf
 elif platform.system() == 'Linux':
@@ -46,7 +47,7 @@ def recognize_Hanzi(model, img, mode='red'):
 
 if __name__ == '__main__':
     if platform.system() == 'Windows':
-        port = 'COM10'
+        port = 'COM11'
     if platform.system() == 'Linux':
         port = '/dev/ttyUSB0' # 接树莓派左上USB口
     serialport = serial.Serial(port, 9600, timeout=0.5)
@@ -96,8 +97,9 @@ if __name__ == '__main__':
     last_save_time = fpsTime
     red_last_result = None
     green_last_result = None
+    red_remaining = 25
+    green_remaining = 25
 
-    compare_result = None
     while cap.isOpened():
         _, frame = cap.read()
         # print(frame.shape)
@@ -106,6 +108,7 @@ if __name__ == '__main__':
 
         green_result = None
         red_result = None
+        compare_result = None
          
         green_pre_result,green_peaks = recognize_Hanzi(model, frame_green, mode = 'green') # 第一次识别
         if green_peaks is not None:
@@ -161,6 +164,7 @@ if __name__ == '__main__':
             compare_result = compare.compare(red_result, green_result)
             print(compare_result)
             cv2.putText(frame,compare_result,(800, 50), font, 1,(255, 0, 0), 2, cv2.LINE_AA, 0)
+            red_remaining, green_remaining = show_UI(compare_result, red_remaining, green_remaining) # UI显示
             # 将比较结果通过串口发送给Arduino
             if serialport.isOpen():
                 sendchar = compareDict[compare_result]
@@ -168,6 +172,7 @@ if __name__ == '__main__':
                 receive_data = bytes(serialport.readline()).decode('ascii')
                 if receive_data != '':
                     print(receive_data[:-2])
+            # time.sleep(0.5) # 时间可调整
 
 
         cTime = time.time()
