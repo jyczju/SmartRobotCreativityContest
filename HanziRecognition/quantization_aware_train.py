@@ -14,7 +14,7 @@ from tensorflow.keras.optimizers import Adam
 from keras.preprocessing.image import ImageDataGenerator
 import matplotlib.pyplot as plt
  
-# 参数设置 ##############################################################################################
+# 参数设置
 
 img_size = (100, 150)
 batch_size = 32
@@ -122,7 +122,6 @@ test_dataset = make_Dataset(test_filenames,test_labels,img_size,test_total)
 
  
 # 量化感知训练
- 
 # 读取模型并测试准确率
 model = tf.keras.models.load_model(weight_path)
 # loss0, accuracy0 = model.evaluate(test_dataset)

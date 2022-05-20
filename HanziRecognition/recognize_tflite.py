@@ -173,7 +173,12 @@ if __name__ == '__main__':
                 if receive_data != '':
                     print(receive_data[:-2])
             # time.sleep(0.5) # 时间可调整
-
+        
+        if platform.system() == 'Windows':
+            cv2.imshow('frame',frame)
+        elif platform.system() == 'Linux':
+            frame = cv2.resize(frame, (640, 480))
+            cv2.imshow('frame',frame)
 
         cTime = time.time()
         fps_text = 1/(cTime-fpsTime)

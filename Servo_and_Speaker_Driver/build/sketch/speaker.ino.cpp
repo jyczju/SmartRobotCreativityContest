@@ -11,7 +11,7 @@
 
 #include <SoftwareSerial.h>                                     
 
-SoftwareSerial mySerial(22, 23); //使用软件串口，模块TX接D10，RX接D11
+SoftwareSerial mySerial_speaker(22, 23); //使用软件串口，模块TX接D10，RX接D11
 char Chinese_welcome[40] = {char(0xBB), char(0xB6), char(0xD3), char(0xAD), char(0xCA), char(0xB9), char(0xD3), char(0xC3), char(0xD6), char(0xC7), char(0xC4), char(0xDC), char(0xBE), char(0xFC), char(0xC6), char(0xEC), char(0xD6), char(0xFA), char(0xCA), char(0xD6)}; //欢迎使用智能军旗助手
 char Chinese_gw[20] = {char(0xC2), char(0xCC), char(0xB7), char(0xBD), char(0xBB), char(0xF1), char(0xCA), char(0xA4)}; //绿方获胜
 char Chinese_rw[20] = {char(0xBA), char(0xEC), char(0xB7), char(0xBD), char(0xBB), char(0xF1), char(0xCA), char(0xA4)}; //红方获胜
@@ -38,10 +38,10 @@ void setup()
 {
     Serial.begin(9600); //设置串口波特率9600
     Serial.println("Serial ON");
-    mySerial.begin(9600);
-    mySerial.print("<S>2"); //设置语速2，（1-3级可调）
+    mySerial_speaker.begin(9600);
+    mySerial_speaker.print("<S>2"); //设置语速2，（1-3级可调）
     delay(50);
-    mySerial.print("<V>3"); //设置音量3，（1-6级可调，声音过大会失真）
+    mySerial_speaker.print("<V>3"); //设置音量3，（1-6级可调，声音过大会失真）
     delay(50);
     SYN_FrameInfo(0, Chinese_welcome); //播放“欢迎使用智能军旗助手”
     delay(DELAY_TIME);
@@ -133,7 +133,7 @@ void SYN_FrameInfo(uint8_t Music, char *HZdata)
     Frame_Info[5 + HZ_Length] = ecc;
     for (i = 0; i < 5 + HZ_Length + 1; i++)
     {
-        mySerial.write(Frame_Info[i]);
+        mySerial_speaker.write(Frame_Info[i]);
     }
 }
 

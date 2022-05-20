@@ -7,7 +7,7 @@ Servo servo1; // 定义Servo对象来控制
 Servo servo2; // 定义Servo对象来控制
 int pos = 0;   // 角度存储变量
 
-void Serco_Syn_Write(int angle);
+void Servo_Syn_Write(int angle);
 
 void setup()
 {
@@ -31,15 +31,15 @@ void loop()
 //
 //    servo1.write(0);
 //    servo2.write(0);
-    Serco_Syn_Write(0);
+    Servo_Syn_Write(0);
     delay(1000);
 //    servo1.write(180);
 //    servo2.write(180);
-    Serco_Syn_Write(180);
+    Servo_Syn_Write(180);
     delay(1000);
 }
 
-void Serco_Syn_Write(int angle)
+void Servo_Syn_Write(int angle)
 {
     servo1.write(angle);
     servo2.write(angle);
