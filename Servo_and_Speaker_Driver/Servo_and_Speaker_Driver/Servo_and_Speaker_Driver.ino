@@ -10,8 +10,8 @@ SoftwareSerial mySerial_speaker(22, 23); //使用软件串口，模块TX接D22�
 
 Servo servo1;                    //定义Servo对象来控制
 Servo servo2;                    //定义Servo对象来控制
-int left_angle = 135;             //向左倾斜对应的舵机角度
-int right_angle = 45;           //向右倾斜对应的舵机角度
+int left_angle = 140;             //向左倾斜对应的舵机角度
+int right_angle = 40;           //向右倾斜对应的舵机角度
 int origin_angle = 90;           //初始角度
 int now_angle = 90;              //现在角度
 
@@ -29,10 +29,10 @@ char Chinese_gkr[20] = {char(0xBA), char(0xEC), char(0xB7), char(0xBD), char(0xC
 
 char inputChar = 'Z';
 char lastChar = 'Y';
-const int DELAY_TIME = 2500;
+const int DELAY_TIME = 1000;
 unsigned long pMillis = 0;  //过去时间
 unsigned long cMillis = 0;  //当前时间
-const long ival = 8000;  // 响应间隔时间
+const long ival = 25000;  // 响应间隔时间
 
 void SYN_FrameInfo(uint8_t Music, char *HZdata);
 void Servo_Syn_Write(int angle);
@@ -54,11 +54,30 @@ void setup()
   mySerial_speaker.begin(9600);
   mySerial_speaker.print("<S>2"); //设置语速2，（1-3级可调）
   delay(50);
-  mySerial_speaker.print("<V>3"); //设置音量3，（1-6级可调，声音过大会失真）
+  mySerial_speaker.print("<V>5"); //设置音量3，（1-6级可调，声音过大会失真）
   delay(50);
   SYN_FrameInfo(0, Chinese_welcome); //播放“欢迎使用智能军旗助手”
   Servo_Syn_Write(origin_angle);     //舵机角度初始化
+  delay(50);
+  //清空棋子
+  Servo_Syn_Write(left_angle); //先向左倾斜
+  now_angle = left_angle;
   delay(DELAY_TIME);
+  Servo_Syn_Write(right_angle); //再向右倾斜
+  now_angle = right_angle;
+  delay(DELAY_TIME);
+  Servo_Syn_Write(origin_angle); //回到初始角度
+  now_angle = origin_angle;
+  delay(DELAY_TIME);
+  while(Serial.available())
+  {
+    cMillis = millis();
+    if (cMillis - pMillis > 6000)
+    {
+      pMillis = cMillis;
+      break;
+    }
+  }
 }
 
 void loop()
