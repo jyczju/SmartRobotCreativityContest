@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>480</width>
+    <height>320</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>比较结果</string>
+  </property>
+  <widget class="QPushButton" name="main">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>100</width>
+     <height>30</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>回到主界面</string>
+   </property>
+  </widget>
+  <widget class="QTableWidget" name="compare">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>50</y>
+     <width>460</width>
+     <height>250</height>
+    </rect>
+   </property>
+   <column>
+    <property name="text">
+     <string>序号</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>红方棋子</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>绿方棋子</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>比较结果</string>
+    </property>
+   </column>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
