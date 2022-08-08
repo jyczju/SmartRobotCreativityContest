@@ -115,9 +115,9 @@ model = Sequential([
     # BatchNormalization(),
     Dropout(0.4),
 
-    Dense(64, activation='relu'),
+    # Dense(64, activation='relu'),
     # # BatchNormalization(),
-    Dropout(0.4),
+    # Dropout(0.4),
 
     Dense(2, activation='softmax') # 必须用softmax
 ])
