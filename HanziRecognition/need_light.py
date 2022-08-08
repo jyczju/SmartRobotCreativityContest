@@ -18,13 +18,13 @@ def need_light(img):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     # 计算灰度直方图
     hist = cv2.calcHist([gray], [0], None, [256], [0, 255])
-    # print(hist)
-    # plt.figure(0)
-    # plt.plot(hist)
-    # plt.show()
+    plt.figure(0)
+    plt.plot(hist)
+    plt.show()
     # 计算光比
     light_ratio = hist[215:-1].sum() / hist[0:40].sum()
     # print(light_ratio)
+    
     # 计算极端情况的占比
     ratio = 1 - hist[40:215].sum()/hist.sum()
     # print(ratio)

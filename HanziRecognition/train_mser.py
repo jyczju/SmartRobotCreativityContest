@@ -15,15 +15,15 @@ from keras.callbacks import ModelCheckpoint,EarlyStopping,ReduceLROnPlateau,Tens
 from f1_score import F1_Score
 import datetime
 
-qizi = ['dilei','gongbin','junqi','junzhang','lianzhang','lvzhang','paizhang','shizhang','siling','tuanzhang','yinzhang','zhadan']
+qizi = ['qizi','other']
  
 # 图片尺寸
 height, width = 100, 150
 input_shape = (height, width, 1)
  
-train_data_dir = './data/train'
-validation_data_dir = './data/validation'
-save_model_path = "./results/temp.h5"  # 保存模型路径和名称
+train_data_dir = './data_mser/train'
+validation_data_dir = './data_mser/validation'
+save_model_path = "./results/temp_2class.h5"  # 保存模型路径和名称
 
 # 图片生成器ImageDataGenerator
 train_pic_gen = ImageDataGenerator(
@@ -85,7 +85,7 @@ validation_flow = validation_pic_gen.flow_from_directory(
 #     BatchNormalization(),
 #     # Dropout(0.4),
 
-#     Dense(12, activation='softmax') # 必须用softmax
+#     Dense(2, activation='softmax') # 必须用softmax
 # ])
 
 
@@ -100,15 +100,14 @@ model = Sequential([
     MaxPooling2D(pool_size=2),
 
     Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
-    Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
+    # Conv2D(filters=64, kernel_size=3, padding='same', activation='relu'),
     # SpatialDropout2D(0.2),
     # BatchNormalization(axis=3),
     MaxPooling2D(pool_size=2),
 
-    Conv2D(filters=128, kernel_size=3, padding='same', activation='relu'),
     # Conv2D(filters=128, kernel_size=3, padding='same', activation='relu'),
-    # SpatialDropout2D(0.2),
-    MaxPooling2D(pool_size=2),
+    # # Conv2D(filters=128, kernel_size=3, padding='same', activation='relu'),
+    # MaxPooling2D(pool_size=2),
 
     Flatten(),
 
@@ -116,11 +115,11 @@ model = Sequential([
     # BatchNormalization(),
     Dropout(0.4),
 
-    # Dense(64, activation='relu'),
+    Dense(64, activation='relu'),
     # # BatchNormalization(),
-    # Dropout(0.4),
+    Dropout(0.4),
 
-    Dense(12, activation='softmax') # 必须用softmax
+    Dense(2, activation='softmax') # 必须用softmax
 ])
 
 # f1_score
@@ -140,7 +139,7 @@ model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy
 
 model.summary()
 
-plot_model(model, to_file='model-CNN.png', show_shapes=True)
+plot_model(model, to_file='model_CNN_2class.png', show_shapes=True)
 
 lr_reduce = ReduceLROnPlateau(monitor='val_accuracy',factor=0.1, patience=3,verbose=1,mode = 'max', min_lr=1e-11)
 
@@ -182,7 +181,7 @@ plt.plot(history.history['val_accuracy'], label='val_accuracy')
 plt.title('accuracy')
 plt.legend()
 
-plt.savefig('history.png')
+plt.savefig('history_2class.png')
 plt.show()
 
 # model = load_model(save_model_path)
