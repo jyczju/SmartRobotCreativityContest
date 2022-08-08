@@ -125,7 +125,7 @@ def find_potential_hanzi_boxes(boxes, lower_bound = 60, upper_bound = 190):
     hanzi_box = []
     for box in boxes:
         # print(box[2] -box[0],box[3] -box[1])
-        if len(box) == 4 and box[2] -box[0] > lower_bound and box[3] - box[1] > lower_bound and box[2] -box[0] < upper_bound and box[3] - box[1] < upper_bound:
+        if len(box) == 4 and (upper_bound > box[2] -box[0] > lower_bound and upper_bound > box[3] - box[1] > lower_bound) or (upper_bound/3 > box[2] -box[0] > lower_bound/3 and upper_bound/3 > box[3] - box[1] > lower_bound/3):
             # print(box[2] -box[0],box[3] -box[1])
             hanzi_box.append(box)
     return hanzi_box
@@ -136,6 +136,7 @@ def hanzi_box_detect(img):
     h,w = img.shape[:2]
     gray = np.zeros((h,w), np.uint8)
     gray[:,:] = img[:,:,2] # 取红色通道
+    gray = np.clip(gray, 0, 155) # 压制高光
 
     vis = img.copy()
     orig = img.copy()
@@ -276,58 +277,62 @@ def ensure_dir(dir_path):
         except OSError:
             pass
 
-if __name__ == '__main__':
-    # 读取图片
-    imagePath = r"origin_img\red\zhadan\14.jpg"
-    img = cv2.imread(imagePath)
-    orig = img.copy()
-
-    hanzi_box = hanzi_box_detect(img)
-    print(hanzi_box)
-    for (x, y, x2, y2) in hanzi_box:
-        cv2.rectangle(orig, (x, y), (x2, y2), (0, 255, 0), 2)
-    cv2.imshow("hanzi_box", orig)
-
-    # color = color_detect(img)
-    # # print("color:", color)
-    # h,s,v = rgb2hsv(color[2], color[1], color[0])
-    # print("hsv:", h,s,v)
-
-    cv2.waitKey(0)
-
 # if __name__ == '__main__':
-#     qizi = ['dilei', 'gongbin', 'junqi', 'junzhang', 'lianzhang', 'lvzhang',
-#             'paizhang', 'shizhang', 'siling', 'tuanzhang', 'yinzhang', 'zhadan']
+    # # 读取图片
+    # imagePath = r"origin_img\red\zhadan\14.jpg"
+    # img = cv2.imread(imagePath)
+    # orig = img.copy()
 
-#     print('extract red qizi')
-#     for i in range(0, 12):
-#         print(qizi[i])
-#         save_dir = './extract_img_mser/' + qizi[i] # 保存文件夹
-#         img_dir = './origin_img/red/' + qizi[i] # 来源文件夹
+    # hanzi_box = hanzi_box_detect(img)
+    # print(hanzi_box)
+    # for (x, y, x2, y2) in hanzi_box:
+    #     cv2.rectangle(orig, (x, y), (x2, y2), (0, 255, 0), 2)
+    # cv2.imshow("hanzi_box", orig)
 
-#         for _, _, files in os.walk(img_dir):
-#             # 遍历文件
-#             # print(files)
-#             for f in files:
-#                 img_file_dir = img_dir + '/' + f
-#                 ensure_dir(save_dir)
-#                 save_file_dir = save_dir + '/ex_red_' + f
-#                 img = cv2.imread(img_file_dir)  # 读取图片
-#                 img = img[0:719,0:700,:]
-#                 gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-#                 # cv2.imshow('img', img)
-#                 hanzi_boxes = hanzi_box_detect(img)
-#                 print(hanzi_boxes)
-#                 i = 1
-#                 for (x, y, x2, y2) in hanzi_boxes:
-#                     red_Hanzi = gray[x:x2,y:y2]   
-#                     if red_Hanzi is None or red_Hanzi.shape[0] == 0 or red_Hanzi.shape[1] == 0:
-#                         print('Failed')
-#                     else:
-#                         print('Success')
-#                         save_file_dir_tmp = save_file_dir[:-4] + '_' + str(i) + '.jpg'
-#                         print(save_file_dir_tmp)
-#                         red_Hanzi = cv2.resize(red_Hanzi, (150, 100))
-#                         cv2.imwrite(save_file_dir_tmp, red_Hanzi)
-#                         i += 1
-#     cv2.waitKey(0)
+    # # color = color_detect(img)
+    # # # print("color:", color)
+    # # h,s,v = rgb2hsv(color[2], color[1], color[0])
+    # # print("hsv:", h,s,v)
+
+    # cv2.waitKey(0)
+
+if __name__ == '__main__':
+    qizi = ['dilei', 'gongbin', 'junqi', 'junzhang', 'lianzhang', 'lvzhang',
+            'paizhang', 'shizhang', 'siling', 'tuanzhang', 'yinzhang', 'zhadan']
+
+    print('extract red qizi')
+    for i in range(0, 12):
+        print(qizi[i])
+        save_dir = './extract_img_mser/' + qizi[i] # 保存文件夹
+        img_dir = './origin_img/red/' + qizi[i] # 来源文件夹
+
+        for _, _, files in os.walk(img_dir):
+            # 遍历文件
+            # print(files)
+            for f in files:
+                img_file_dir = img_dir + '/' + f
+                ensure_dir(save_dir)
+                save_file_dir = save_dir + '/ex_red_' + f
+                img = cv2.imread(img_file_dir)  # 读取图片
+                img = img[0:719,0:700,:]
+                gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+                # cv2.imshow('img', img)
+                hanzi_boxes = hanzi_box_detect(img)
+                print(hanzi_boxes)
+                i = 1
+                for (x, y, x2, y2) in hanzi_boxes:
+                    red_Hanzi = gray[x:x2,y:y2]   
+                    if red_Hanzi is None or red_Hanzi.shape[0] == 0 or red_Hanzi.shape[1] == 0:
+                        print('Failed')
+                    else:
+                        print('Success')
+                        save_file_dir_tmp = save_file_dir[:-4] + '_' + str(i) + '.jpg'
+                        print(save_file_dir_tmp)
+                        if x2-x > y2-y:
+                            red_Hanzi = cv2.resize(red_Hanzi, (150, 100))
+                        else:
+                            red_Hanzi = cv2.resize(red_Hanzi, (100, 150))
+                            red_Hanzi = np.rot90(red_Hanzi)
+                        cv2.imwrite(save_file_dir_tmp, red_Hanzi)
+                        i += 1
+    cv2.waitKey(0)

@@ -105,9 +105,9 @@ model = Sequential([
     # BatchNormalization(axis=3),
     MaxPooling2D(pool_size=2),
 
+    Conv2D(filters=128, kernel_size=3, padding='same', activation='relu'),
     # Conv2D(filters=128, kernel_size=3, padding='same', activation='relu'),
-    # # Conv2D(filters=128, kernel_size=3, padding='same', activation='relu'),
-    # MaxPooling2D(pool_size=2),
+    MaxPooling2D(pool_size=2),
 
     Flatten(),
 
