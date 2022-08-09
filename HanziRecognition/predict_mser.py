@@ -6,12 +6,14 @@ import cv2
 def predict_Hanzi(model, img):
     '''判断图片中是否含有棋子'''
     h,w = img.shape[:2]
-    if h != 100 and w != 150:
+    # print("h,w:",h,w)
+    if h != 100 or w != 150:
         if w > h:
             img = cv2.resize(img, (150, 100))
-        else:
+        else:           
             img = cv2.resize(img, (100, 150))
             img = np.rot90(img)
+            # print(img.shape)
     
     qizi = ['qizi', 'other']
     img = img.astype(float)
@@ -32,7 +34,7 @@ def predict_Hanzi(model, img):
 
 
 if __name__ == '__main__':
-    save_model_path = "./results/temp_2class_986.h5"  # 保存模型路径和名称
+    save_model_path = "./results/temp_2class_960.h5"  # 保存模型路径和名称
     # img_path = './data_mser/test/qizi/qizi_0_39.jpg'
     img_path = r'data_img\test_img\dilei\ex_green_14.jpg'
 

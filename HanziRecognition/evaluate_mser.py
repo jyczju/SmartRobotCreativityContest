@@ -24,7 +24,11 @@ def evaluate(model, test_path):
                 img_file_dir = img_dir + '/' + f
                 img = cv2.imread(img_file_dir, cv2.IMREAD_GRAYSCALE)  # 读取图片
 
-                pre_result = predict_mser.predict_Hanzi(model, img)  # 对图片中的文字进行预测
+                pre_result_float = predict_mser.predict_Hanzi(model, img)  # 对图片中的文字进行预测
+                if pre_result_float > 0.5:
+                    pre_result = qizi[0]
+                else:
+                    pre_result = qizi[1]
                 
                 test_predict = np.hstack([test_predict, pre_result]) # 预测结果
                 test_targ = np.hstack([test_targ, qizi[i]]) # 标签
@@ -43,7 +47,7 @@ def evaluate(model, test_path):
     print('accuracy:', acc)
 
 if __name__ == '__main__':
-    save_model_path = "results/temp_2class_986.h5"  # 保存模型路径和名称
+    save_model_path = "results/temp_2class_960.h5"  # 保存模型路径和名称
     test_path = './data_mser/test'
     model = load_model(save_model_path)
     

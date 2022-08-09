@@ -58,7 +58,7 @@ for i in range(0, len(qizi)):
         for f in files:
             img_file_dir = img_dir + '/' + f
             ensure_dir(save_dir)
-            img_create(img_file_dir, save_dir, qizi[i], num=45)
+            img_create(img_file_dir, save_dir, qizi[i], num=35)
     print("train: ", i)
 
 # 生成验证集
@@ -70,7 +70,7 @@ for i in range(0, len(qizi)):
         for f in files:
             img_file_dir = img_dir + '/' + f
             ensure_dir(save_dir)
-            img_create(img_file_dir, save_dir, qizi[i], num=15)
+            img_create(img_file_dir, save_dir, qizi[i], num=10)
     print("validation: ", i)
 
 # 生成测试集
