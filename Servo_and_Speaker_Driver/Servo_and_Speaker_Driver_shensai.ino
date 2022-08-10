@@ -27,21 +27,6 @@ char Chinese_gskbd[20] = {char(0xC2), char(0xCC), char(0xB7), char(0xBD), char(0
 char Chinese_rkg[20] = {char(0xC2), char(0xCC), char(0xB7), char(0xBD), char(0xC6), char(0xE5), char(0xD7), char(0xD3), char(0xD5), char(0xF3), char(0xCD), char(0xF6)};                                                                                                     //绿方棋子阵亡
 char Chinese_gkr[20] = {char(0xBA), char(0xEC), char(0xB7), char(0xBD), char(0xC6), char(0xE5), char(0xD7), char(0xD3), char(0xD5), char(0xF3), char(0xCD), char(0xF6)};                                                                                                     //红方棋子阵亡
 
-char green_killed[52]={char(0xC2),char(0xCC),char(0xB7),char(0xBD),char(0xC1),char(0xAC),char(0xCA),char(0xA7),char(0xB6),char(0xE0),char(0xB8),char(0xF6),char(0xC6),char(0xE5),char(0xD7),char(0xD3),char(0xCD),char(0xFB),char(0xB5),char(0xF7),char(0xD5),char(0xFB),char(0xD7),char(0xB4),char(0xCC),char(0xAC)};//绿方连失多个棋子望调整状态
-char red_killed[52]={char(0xBA),char(0xEC),char(0xB7),char(0xBD),char(0xC1),char(0xAC),char(0xCA),char(0xA7),char(0xB6),char(0xE0),char(0xB8),char(0xF6),char(0xC6),char(0xE5),char(0xD7),char(0xD3),char(0xCD),char(0xFB),char(0xB5),char(0xF7),char(0xD5),char(0xFB),char(0xD7),char(0xB4),char(0xCC),char(0xAC)};//红方连失多个棋子望调整状态
-char red_less[64]={char(0xBA),char(0xEC),char(0xB7),char(0xBD),char(0xC6),char(0xE5),char(0xD7),char(0xD3),char(0xCA),char(0xFD),char(0xB1),char(0xC8),char(0xB6),char(0xD4),char(0xB7),char(0xBD),char(0xC9),char(0xD9),char(0xC1),char(0xF9),char(0xC3),char(0xB6),char(0xCD),char(0xFB),char(0xD4),char(0xD9),char(0xBD),char(0xD3),char(0xD4),char(0xD9),char(0xC0),char(0xF7)};//红方棋子数比对方少六枚望再接再厉
-char green_less[64]={char(0xC2),char(0xCC),char(0xB7),char(0xBD),char(0xC6),char(0xE5),char(0xD7),char(0xD3),char(0xCA),char(0xFD),char(0xB1),char(0xC8),char(0xB6),char(0xD4),char(0xB7),char(0xBD),char(0xC9),char(0xD9),char(0xC1),char(0xF9),char(0xC3),char(0xB6),char(0xCD),char(0xFB),char(0xD4),char(0xD9),char(0xBD),char(0xD3),char(0xD4),char(0xD9),char(0xC0),char(0xF7)};//绿方棋子数比对方少六枚望再接再厉
-char red_sili[72]={char(0xBA),char(0xEC),char(0xB7),char(0xBD),char(0xCB),char(0xBE),char(0xC1),char(0xEE),char(0xD5),char(0xF3),char(0xCD),char(0xF6),char(0xD0),char(0xE8),char(0xBD),char(0xAB),char(0xBE),char(0xFC),char(0xC6),char(0xEC),char(0xB7),char(0xAD),char(0xD7),char(0xAA),char(0xC8),char(0xAB),char(0xC1),char(0xA6),char(0xB1),char(0xA3),char(0xBB),char(0xA4),char(0xBE),char(0xFC),char(0xC6),char(0xEC)};//红方司令阵亡需将军旗翻转全力保护军旗
-char green_sili[72]={char(0xC2),char(0xCC),char(0xB7),char(0xBD),char(0xCB),char(0xBE),char(0xC1),char(0xEE),char(0xD5),char(0xF3),char(0xCD),char(0xF6),char(0xD0),char(0xE8),char(0xBD),char(0xAB),char(0xBE),char(0xFC),char(0xC6),char(0xEC),char(0xB7),char(0xAD),char(0xD7),char(0xAA),char(0xC8),char(0xAB),char(0xC1),char(0xA6),char(0xB1),char(0xA3),char(0xBB),char(0xA4),char(0xBE),char(0xFC),char(0xC6),char(0xEC)};//绿方司令阵亡需将军旗翻转全力保护军旗
-'''
-Q:  红方多绿方多6子，红方连续击杀
-R： 绿方比红方多6子，绿方连续击杀
-M： 红方连续击杀
-N： 绿方连续击杀
-O： 绿方比红方多6子
-P： 红方多绿方多6子
-'''
-
 char inputChar = 'Z';
 char lastChar = 'Y';
 const int DELAY_TIME = 1000;
@@ -157,15 +142,12 @@ void loop()
         Servo_Syn_Write(left_angle); //先向左倾斜
         now_angle = left_angle;
         delay(DELAY_TIME);
-        SYN_FrameInfo(0, red_sili);
-        delay(DELAY_TIME);
         Servo_Syn_Write(right_angle); //再向右倾斜
         now_angle = right_angle;
         delay(DELAY_TIME);
-        SYN_FrameInfo(0, green_sili);
         Servo_Syn_Write(origin_angle); //回到初始角度
         now_angle = origin_angle;
-        delay(DELAY_TIME); 
+        delay(DELAY_TIME);
       }
       else if (inputChar == 'D')
       {
@@ -174,10 +156,8 @@ void loop()
         Servo_Syn_Write(left_angle); //向左倾斜
         now_angle = left_angle;
         delay(DELAY_TIME);
-        SYN_FrameInfo(0, red_sili);
         Servo_Syn_Write(origin_angle); //回到初始角度
         now_angle = origin_angle;
-        delay(DELAY_TIME);
         delay(DELAY_TIME);
       }
       else if (inputChar == 'E')  //?
@@ -187,7 +167,6 @@ void loop()
         Servo_Syn_Write(right_angle); //向右倾斜
         now_angle = right_angle;
         delay(DELAY_TIME);
-        SYN_FrameInfo(0, green_sili);
         Servo_Syn_Write(origin_angle); //回到初始角度
         now_angle = origin_angle;
         delay(DELAY_TIME);
@@ -213,11 +192,9 @@ void loop()
         Servo_Syn_Write(left_angle); //向左倾斜
         now_angle = left_angle;
         delay(DELAY_TIME);
-        SYN_FrameInfo(0, red_sili);
         Servo_Syn_Write(origin_angle); //回到初始角度
         now_angle = origin_angle;
         delay(DELAY_TIME);
-        SYN_FrameInfo(0, red_sili);
       }
       else if (inputChar == 'H')
       {
@@ -226,11 +203,9 @@ void loop()
         Servo_Syn_Write(right_angle); //向右倾斜
         now_angle = right_angle;
         delay(DELAY_TIME);
-        SYN_FrameInfo(0, green_sili);
         Servo_Syn_Write(origin_angle); //回到初始角度
         now_angle = origin_angle;
         delay(DELAY_TIME);
-        SYN_FrameInfo(0, green_sili);
       }
       else if (inputChar == 'I')
       {
@@ -275,42 +250,6 @@ void loop()
         Servo_Syn_Write(origin_angle); //回到初始角度
         now_angle = origin_angle;
         delay(DELAY_TIME);
-      }
-      else if (inputChar == 'M')
-      {
-          SYN_FrameInfo(0, green_killed); //播放“绿方连失多个棋子望调整状态”
-          Serial.println("green was killed three times");
-      }
-      else if (inputChar == 'N')
-      {
-          SYN_FrameInfo(0, red_killed); //播放“红方连失多个棋子望调整状态”
-          Serial.println("red was killed three times");
-      }
-      else if (inputChar == 'O')
-      {
-          SYN_FrameInfo(0, red_less); //播放“红方棋子数比对方少六枚望再接再厉”
-          Serial.println("red is six less than green");
-      }
-      else if (inputChar == 'P')
-      {
-          SYN_FrameInfo(0, green_less); //播放“绿方棋子数比对方少六枚望再接再厉”
-          Serial.println("green is six less than red");
-      }
-      else if (inputChar == 'Q')
-      {
-          SYN_FrameInfo(0, gre_killed); //播放“绿方连失多个棋子望调整状态”
-          Serial.println("green was killed three times");
-          delay(DELAY_TIME);
-          SYN_FrameInfo(0, green_less); //播放“绿方棋子数比对方少六枚望再接再厉”
-          Serial.println("green is six less than red");
-      }
-      else if (inputChar == 'R')
-      {
-          SYN_FrameInfo(0, red_killed); //播放“红方连失多个棋子望调整状态”
-          Serial.println("red was killed three times");
-          delay(DELAY_TIME);
-          SYN_FrameInfo(0, red_less); //播放“红方棋子数比对方少六枚望再接再厉”
-          Serial.println("red is six less than green");
       }
       else
       {

@@ -112,6 +112,7 @@ model = Sequential([
     Flatten(),
 
     Dense(128, activation='relu'), 
+    # Dense(64, activation='relu'), 
     # BatchNormalization(),
     Dropout(0.4),
 
