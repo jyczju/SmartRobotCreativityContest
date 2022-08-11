@@ -38,20 +38,28 @@ def extract_red(img, color_hsv):
 
     hsv_img = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)  # 转换为HSV空间
 
-    # lower_red1 = np.array([0, 50, 0])  # 设定红色的阈值下限
-    # upper_red1 = np.array([10, 255, 255])  # 设定红色的阈值上限
-    # lower_red2 = np.array([165, 50, 0])  # 设定红色的阈值下限
+    lower_red1 = np.array([0, 50, 0])  # 设定红色的阈值下限
+    upper_red1 = np.array([10, 255, 255])  # 设定红色的阈值上限
+    lower_red2 = np.array([165, 50, 0])  # 设定红色的阈值下限
+    upper_red2 = np.array([180, 255, 255])  # 设定红色的阈值上限
+    # lower_red1 = np.array([0, 48, 0])  # 设定红色的阈值下限
+    # upper_red1 = np.array([17, 255, 255])  # 设定红色的阈值上限
+    # lower_red2 = np.array([158, 48, 0])  # 设定红色的阈值下限
     # upper_red2 = np.array([180, 255, 255])  # 设定红色的阈值上限
-    if color_hsv[0] < 90:
-        lower_red1 = np.array([0, color_hsv[1]-20, color_hsv[2]-20])  # 设定红色的阈值下限
-        upper_red1 = np.array([color_hsv[0]+10, color_hsv[1]+20, color_hsv[2]+20])  # 设定红色的阈值上限
-        lower_red2 = np.array([165, color_hsv[1]-20, color_hsv[2]-20])  # 设定红色的阈值下限
-        upper_red2 = np.array([180, color_hsv[1]+20, color_hsv[2]+20])  # 设定红色的阈值上限
-    else:
-        lower_red1 = np.array([0, color_hsv[1]-20, color_hsv[2]-20])  # 设定红色的阈值下限
-        upper_red1 = np.array([10, color_hsv[1]+20, color_hsv[2]+20])  # 设定红色的阈值上限
-        lower_red2 = np.array([color_hsv[0]-10, color_hsv[1]-20, color_hsv[2]-20])  # 设定红色的阈值下限
-        upper_red2 = np.array([180, color_hsv[1]+20, color_hsv[2]+20])  # 设定红色的阈值上限
+    # lower_red1 = np.array([2, 50, 28])  # 设定红色的阈值下限
+    # upper_red1 = np.array([17, 248, 252])  # 设定红色的阈值上限
+    # lower_red2 = np.array([140, 255, 255])  # 设定红色的阈值下限
+    # upper_red2 = np.array([140, 255, 255])  # 设定红色的阈值上限
+    # if color_hsv[0] < 90:
+    #     lower_red1 = np.array([0, color_hsv[1]-40, color_hsv[2]-40])  # 设定红色的阈值下限
+    #     upper_red1 = np.array([color_hsv[0]+10, color_hsv[1]+40, color_hsv[2]+40])  # 设定红色的阈值上限
+    #     lower_red2 = np.array([165, color_hsv[1]-40, color_hsv[2]-40])  # 设定红色的阈值下限
+    #     upper_red2 = np.array([180, color_hsv[1]+40, color_hsv[2]+40])  # 设定红色的阈值上限
+    # else:
+    #     lower_red1 = np.array([0, color_hsv[1]-40, color_hsv[2]-40])  # 设定红色的阈值下限
+    #     upper_red1 = np.array([10, color_hsv[1]+40, color_hsv[2]+40])  # 设定红色的阈值上限
+    #     lower_red2 = np.array([color_hsv[0]-10, color_hsv[1]-40, color_hsv[2]-40])  # 设定红色的阈值下限
+    #     upper_red2 = np.array([180, color_hsv[1]+40, color_hsv[2]+40])  # 设定红色的阈值上限
 
     # 消除噪声
     # plate_mask = cv2.inRange(hsv_img, lower_blue, upper_blue)  # 设定掩膜取值范围
@@ -291,32 +299,11 @@ def ensure_dir(dir_path):
             pass
 
 
-# if __name__ == '__main__':
-#     save_model_path = "./results/temp_2class_960.h5"  # 保存模型路径和名称
-#     model = load_model(save_model_path)
-#     imagePath = r"origin_img\red\lvzhang\WIN_20220507_08_17_30_Pro.jpg"
-#     img = cv2.imread(imagePath)
-#     orig = img.copy()
-
-#     # hanzi_box = hanzi_box_detect(img)
-#     # print(hanzi_box)
-#     # for (x, y, x2, y2) in hanzi_box:
-#     #     cv2.rectangle(orig, (x, y), (x2, y2), (0, 255, 0), 2)
-#     # cv2.imshow("hanzi_box", orig)
-    
-#     color_hsv = color_hsv_detect(img, model)
-#     print("color_hsv:",color_hsv)
-#     qizi_Hanzi, _ = extract_red(img, color_hsv)
-#     cv2.imshow("qizi_Hanzi", qizi_Hanzi)
-
-#     cv2.waitKey(0)
-#     cv2.destroyAllWindows()
-
-
 if __name__ == '__main__':
     save_model_path = "./results/temp_2class_960.h5"  # 保存模型路径和名称
     model = load_model(save_model_path)
-    imagePath = r"origin_img\green\zhadan\WIN_20220507_08_36_52_Pro.jpg"
+    # imagePath = r'origin_img\red\lvzhang\WIN_20220507_08_42_30_Pro.jpg'
+    imagePath = r"origin_img\red\lvzhang\WIN_20220507_08_17_30_Pro.jpg"
     img = cv2.imread(imagePath)
     orig = img.copy()
 
@@ -326,10 +313,32 @@ if __name__ == '__main__':
     #     cv2.rectangle(orig, (x, y), (x2, y2), (0, 255, 0), 2)
     # cv2.imshow("hanzi_box", orig)
     
-    color_hsv = color_hsv_detect(img, model, mode = 'green')
+    color_hsv = color_hsv_detect(img, model)
     print("color_hsv:",color_hsv)
-    qizi_Hanzi, _ = extract_green(img, color_hsv)
-    cv2.imshow("qizi_Hanzi", qizi_Hanzi)
+    qizi_Hanzi, _ = extract_red(img, color_hsv)
+    # cv2.imshow("qizi_Hanzi", qizi_Hanzi)
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
+
+# if __name__ == '__main__':
+#     save_model_path = "./results/temp_2class_960.h5"  # 保存模型路径和名称
+#     model = load_model(save_model_path)
+#     imagePath = r"origin_img\green\zhadan\WIN_20220507_08_36_52_Pro.jpg"
+#     img = cv2.imread(imagePath)
+#     orig = img.copy()
+
+#     # hanzi_box = hanzi_box_detect(img)
+#     # print(hanzi_box)
+#     # for (x, y, x2, y2) in hanzi_box:
+#     #     cv2.rectangle(orig, (x, y), (x2, y2), (0, 255, 0), 2)
+#     # cv2.imshow("hanzi_box", orig)
+    
+#     color_hsv = color_hsv_detect(img, model, mode = 'green')
+#     print("color_hsv:",color_hsv)
+#     qizi_Hanzi, _ = extract_green(img, color_hsv)
+#     cv2.imshow("qizi_Hanzi", qizi_Hanzi)
+
+#     cv2.waitKey(0)
+#     cv2.destroyAllWindows()
